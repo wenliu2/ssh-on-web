@@ -1,0 +1,49 @@
+{
+  "name": "simple-vue-full-stack",
+  "version": "1.0.0",
+  "description": "Sample template code to build a full stack web app,  using Vue, Webpack, Express and Nodejs.",
+  "main": "src/server/index.js",
+  "scripts": {
+    "start": "node src/server/index.js",
+    "build": "webpack --mode production",
+    "client": "webpack-dev-server --mode development --devtool inline-source-map --hot",
+    "server": "nodemon src/server/index.js",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "author": "Wen Liu",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "7.1.0",
+    "@babel/plugin-syntax-dynamic-import": "7.0.0",
+    "@babel/preset-env": "7.1.0",
+    "ajv": "6.5.3",
+    "babel-eslint": "9.0.0",
+    "babel-loader": "8.0.2",
+    "clean-webpack-plugin": "0.1.19",
+    "concurrently": "4.0.1",
+    "cross-env": "5.2.0",
+    "css-loader": "1.0.0",
+    "eslint": "5.6.0",
+    "eslint-config-standard": "12.0.0",
+    "eslint-loader": "2.1.0",
+    "eslint-plugin-import": "2.14.0",
+    "eslint-plugin-node": "7.0.1",
+    "eslint-plugin-promise": "4.0.1",
+    "eslint-plugin-standard": "4.0.0",
+    "eslint-plugin-vue": "5.0.0-beta.3",
+    "html-webpack-plugin": "3.2.0",
+    "node-sass": "4.9.3",
+    "nodemon": "1.18.4",
+    "sass-loader": "7.1.0",
+    "style-loader": "0.23.0",
+    "vue-loader": "15.4.2",
+    "vue-template-compiler": "2.5.17",
+    "webpack": "4.19.1",
+    "webpack-cli": "3.1.0",
+    "webpack-dev-server": "3.1.8"
+  },
+  "dependencies": {
+    "express": "4.16.3",
+    "vue": "2.5.17"
+  }
+}
