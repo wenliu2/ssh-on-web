@@ -4,8 +4,12 @@
   <button v-on:click='sendMessage' :disabled='!wsConnected'> send message </button><button v-on:click='connectToggle'> {{ wsConnected ? 'Disconnect' : 'Connect' }}</button>
   <div v-for='(msg, idx) in messages' :key='"msg" + idx'> {{ msg }} </div>
   -->
-  <div>SSH On Web</div>
-  <div style='text-align: left; position: relative; min-height: calc(100vh - 30px);' ref='termDiv'> </div>
+  <div style='display: flex; flex-direction:row; padding-bottom: 10px'>
+    <button @click='inputConnection'>SSH to ...</button>
+    <div style='padding: 5px;'> {{connection}} - {{wsConnected? "connected" : "disconnected" }} </div>
+    <div style='padding: 5px; position: absolute; right: 10px; font-size: .8em;'> Make SSH easier </div>
+  </div>
+  <div style='text-align: left; position: relative; min-height: calc(100vh - 50px);' ref='termDiv'> </div>
 </div>
 </template>
 <script lang='babel'>
@@ -53,7 +57,9 @@ export default {
           // React to size changes here.
           // Secure Shell pokes at NaCl, which eventually results in
           // some ioctls on the host.
-          console.log(`resize, ${columns}, ${rows}`)
+          // console.log(`resize, ${columns}, ${rows}`)
+          that.cols = columns
+          that.rows = rows
           that.sendMessage('resize', { col: columns, row: rows })
           /*
           if (that.wsConnected) {
@@ -79,7 +85,7 @@ export default {
       t.io.println('Print a string and add CRLF')
       t.io.println('Print a string and add CRLF')
       */
-      that.socketOpen()
+      // that.socketOpen()
     }) // -- lib.init
   },
 
@@ -88,7 +94,10 @@ export default {
       messages: ['msg1', 'msg2'],
       ws: null,
       wsConnected: false,
-      io: null
+      io: null,
+      connection: 'None',
+      cols: 80,
+      rows: 30
     }
   },
 
@@ -106,20 +115,48 @@ export default {
       }
     },
 
-    socketOpen () {
+    reqSShConnect (options) {
+      const { sshuser, sshhost } = options
+      this.sendMessage('connect', {
+        sshuser: sshuser,
+        sshhost: sshhost,
+        sshport: 22,
+        sshauth: 'password,keyboard-interactive',
+        cols: this.cols,
+        rows: this.rows
+      })
+    },
+
+    inputConnection () {
+      const input = prompt('Enter the connection string: user@hostname', 'user@hostname')
+      if (input != null) {
+        let matchResult = input.match(/^([^\s@]+)@([^\s@]+)$/)
+        if (matchResult != null) {
+          this.connection = input
+          if (this.wsConnected) { this.ws.close() }
+          this.socketOpen({ sshhost: matchResult[2], sshuser: matchResult[1] })
+        } else {
+          alert('invalid input')
+        }
+      }
+    },
+
+    socketOpen (options) {
       let { host, protocol } = window.location
       let wsUrl = `${protocol}//${host}/ws`.replace('http', 'ws')
 
       this.ws = new W3cwebsocket(wsUrl)
-      this.ws.onopen = () => { this.wsConnected = true }
-      this.ws.onclose = () => { this.wsConnected = false }
-      this.ws.onerror = () => { this.wsConnected = false }
+      this.ws.onopen = () => {
+        this.wsConnected = true
+        this.reqSShConnect(options)
+      }
+      this.ws.onclose = () => {
+        this.wsConnected = false
+        this.io.writeUTF16('Remotion connection closed.')
+      }
+      this.ws.onerror = () => { this.ws.close() }
 
       this.ws.onmessage = (msg) => {
-        // console.log('msg', msg)
-        // this.addMessage(msg.data)
-        // this.io.print(msg.data)
-
         this.io.writeUTF16(msg.data)
       }
     },

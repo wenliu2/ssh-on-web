@@ -5,7 +5,7 @@ const api = require('./api/api')
 
 const app = express();
 const expressWs = require('express-ws')(app)
-const wsLogic = require('./websocket')
+const WebSocketApp = require('./websocket')
 
 //---------------------
 //serve static contents
@@ -25,7 +25,11 @@ expressWs.getWss().on('connection', function(ws, req){
 */
 
 // register websocket handling logic
-app.ws('/ws', wsLogic)
+app.ws('/ws', (ws, req) => {
+  let wsApp = new WebSocketApp(ws, req)
+  wsApp.connectionHandler()
+})
+
 
 // start server
 const port = 8080;
