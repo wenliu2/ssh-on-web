@@ -1,7 +1,7 @@
 {
-  "name": "simple-vue-full-stack",
+  "name": "ssh-on-web",
   "version": "1.0.0",
-  "description": "Sample template code to build a full stack web app,  using Vue, Webpack, Express and Nodejs.",
+  "description": "ssh on web.",
   "main": "src/server/index.js",
   "scripts": {
     "start": "node src/server/index.js",
@@ -44,6 +44,11 @@
   },
   "dependencies": {
     "express": "4.16.3",
-    "vue": "2.5.17"
+    "express-ws": "4.0.0",
+    "hterm-umdjs": "1.4.1",
+    "log4js": "3.0.5",
+    "pty": "0.0.0",
+    "vue": "2.5.17",
+    "websocket": "1.0.28"
   }
 }
