@@ -13,9 +13,14 @@ router.use((req, resp, next) => {
 })
 
 router.get('/getUsername', (req, res) => {
-    logger.debug('params', req.params);
+    logger.debug('req.user', req.user);
     res.json({ username: os.userInfo().username });
   }
-);
+)
+
+router.get('/login-status', (req, res) => {
+  logger.debug('login_status')
+  res.json({islogin: true})
+})
 
 module.exports = router;

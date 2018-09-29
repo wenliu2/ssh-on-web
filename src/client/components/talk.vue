@@ -1,22 +1,35 @@
 <template>
-<div style='height: 100%'>
-  <!--
-  <button v-on:click='sendMessage' :disabled='!wsConnected'> send message </button><button v-on:click='connectToggle'> {{ wsConnected ? 'Disconnect' : 'Connect' }}</button>
-  <div v-for='(msg, idx) in messages' :key='"msg" + idx'> {{ msg }} </div>
-  -->
-  <div style='display: flex; flex-direction:row; padding-bottom: 10px'>
-    <button @click='inputConnection'>SSH to ...</button>
-    <div style='padding: 5px;'> {{connection}} - {{wsConnected? "connected" : "disconnected" }} </div>
-    <div style='padding: 5px; position: absolute; right: 10px; font-size: .8em;'> Make SSH easier </div>
-  </div>
+<v-app style='height: 100%'>
+  <v-toolbar dense dark>
+    <v-btn icon>
+      <v-icon>list</v-icon>
+    </v-btn>
+    <!--
+    <v-btn raised primary v-on:click='inputConnection' small round>SSH To</v-btn>
+    -->
+    <SSHTo :connectTo='socketOpen'/>
+    <!--
+    <v-btn class='body-2' flat round small v-on:click='inputConnection'>
+      SSH To
+    </v-btn>
+    -->
+    <v-spacer></v-spacer>
+    <div class='caption'> {{connection}} - {{wsConnected? "connected" : "disconnected" }} </div>
+  <!--/v-system-bar-->
+  </v-toolbar>
   <div style='text-align: left; position: relative; min-height: calc(100vh - 50px);' ref='termDiv'> </div>
-</div>
+</v-app>
 </template>
 <script lang='babel'>
 import { w3cwebsocket as W3cwebsocket } from 'websocket'
 import { hterm, lib } from 'hterm-umdjs'
+import GlobalStore from '../global-store'
+import SSHTo from './ssh-to/ssh-to.vue'
 
 export default {
+  components: {
+    SSHTo
+  },
   mounted () {
     const that = this
     hterm.defaultStorage = new lib.Storage.Local()
@@ -31,6 +44,7 @@ export default {
       // to support non-ascii,  ex: Chinese
       t.prefs_.set('send-encoding', 'raw')
       t.prefs_.set('font-family', 'Droid Sans Mono for Powerline, Helvetica, Arial, sans-serif')
+      t.prefs_.set('font-size', '12px')
 
       t.onTerminalReady = () => {
         // Create a new terminal IO object and give it the foreground.
@@ -97,7 +111,8 @@ export default {
       io: null,
       connection: 'None',
       cols: 80,
-      rows: 30
+      rows: 30,
+      auth: GlobalStore.auth
     }
   },
 
@@ -127,6 +142,7 @@ export default {
       })
     },
 
+    /*
     inputConnection () {
       const input = prompt('Enter the connection string: user@hostname', 'user@hostname')
       if (input != null) {
@@ -140,12 +156,15 @@ export default {
         }
       }
     },
+    */
 
     socketOpen (options) {
+      if (this.wsConnected) { this.ws.close() }
+
       let { host, protocol } = window.location
       let wsUrl = `${protocol}//${host}/ws`.replace('http', 'ws')
 
-      this.ws = new W3cwebsocket(wsUrl)
+      this.ws = new W3cwebsocket(wsUrl, this.auth.token)
       this.ws.onopen = () => {
         this.wsConnected = true
         this.reqSShConnect(options)

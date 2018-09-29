@@ -1,36 +1,44 @@
+const config = require('./config')
 const express = require('express');
 const logger = require('./logger')('main')
+
+require('./passport-config')
+const passport = require('passport')
 
 const api = require('./api/api')
 
 const app = express();
 const expressWs = require('express-ws')(app)
-const WebSocketApp = require('./websocket')
+const ws = require('./websocket')
 
+const auth = require('./auth')
+const bodyParser = require('body-parser')
+
+const db = require('./db/')
+
+logger.debug('dbCofnig:', db.dbConfig)
 //---------------------
 //serve static contents
 //---------------------
 app.use(express.static('dist'));
+//body parser
+app.use(bodyParser.json({ type: 'application/json' }))
+app.use(bodyParser.urlencoded({extended: true}))
 app.disable('x-powered-by');
 
 //---------------------
 //api part
 //--------------------
-app.use('/api', api);
+app.use('/api', passport.authenticate('jwt', {session: false}), api)
+// auth
+app.use('/auth', auth)
 
-/*
-expressWs.getWss().on('connection', function(ws, req){
-  logger.debug('connected', req);  
-});
-*/
-
-// register websocket handling logic
-app.ws('/ws', (ws, req) => {
-  let wsApp = new WebSocketApp(ws, req)
-  wsApp.connectionHandler()
-})
-
+// register websocket
+app.use('/ws', passport.authenticate('jwt', {session: false}), ws)
 
 // start server
-const port = 8080;
-app.listen(port, () => logger.debug(`Listening on port ${port}!`));
+const port = config.get('port');
+app.listen(port, () => {
+  logger.debug(`Listening on port ${port}!`)
+  db.connect()
+});

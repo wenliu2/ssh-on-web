@@ -1,49 +1,65 @@
 <template>
   <div id="app">
-    <!--
-    <h1>Simple Vue Full Stack Example! </h1>
-    <Welcome :name='name'/>
-    -->
-    <Talk/>
-    <!--
-    <button v-on:click='fetchUser'>fetch user</button>
-    -->
+    <div v-if='checkAuth'>Checking Login Status ... </div>
+    <Login v-if='!checkAuth && !auth.isLogin'/>
+    <Talk v-if='!checkAuth && auth.isLogin'/>
   </div>
 </template>
 
 <script lang='babel'>
 // import Welcome from './components/welcome.vue'
 import Talk from './components/talk.vue'
+import GlobalStore from './global-store'
+import Login from './components/login.vue'
+import ls from 'local-storage'
 
 export default {
-  components: { Talk },
+  components: { Talk, Login },
   data () {
     return {
-      name: 'Initial value.'
+      name: 'Initial value.',
+      auth: GlobalStore.auth,
+      checkAuth: false
     }
   },
 
-  mounted () {
+  created () {
+    const token = ls('token')
+    if (!token) return
+    this.auth.setToken(token)
+    this.checkAuth = true
+    fetch('/api/login-status', {
+      headers: {
+        'Authorization': `Bearer ${this.auth.token}`
+      }
+    }).then((res) => {
+      this.checkAuth = false
+      if (res.ok) {
+        this.auth.login()
+      } else if (res.status === 401) {
+        this.auth.logout()
+      }
+    }).catch(err => {
+      console.error('login error: ', err)
+      this.checkAuth = false
+      this.auth.logout()
+    })
   },
   methods: {
-    fetchUser () {
-      fetch('/api/getUsername')
-        .then(res => res.json())
-        .then(user => { this.name = user.username })
-    }
   }
 }
 </script>
 
 <style>
 #app {
+  /*
   font-family: 'Droid Sans Mono for Powerline', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
   margin-top: 10px;
-  font-size: 0.8em;
+  font-size: 12px;
+  */
   height: calc(100vh - 16px);
 }
 </style>

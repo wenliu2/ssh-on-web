@@ -1,5 +1,12 @@
+const express = require('express')
 const logger = require('./logger')('websocket')
 const pty = require('pty')
+
+const router = express.Router()
+router.ws('/', (ws, req) => {
+  const wsApp = new SocketApp(ws, req)  
+  wsApp.connectionHandler()
+})
 
 class SocketApp {
   constructor (ws, req) {
@@ -9,30 +16,8 @@ class SocketApp {
   }
 
   connectionHandler (){
-    logger.debug('socket connected')
+    logger.debug('socket connected', this.req.user)
 
-    // const sshuser = 'wenliu2'
-    // const sshhost = 'localhost'
-    // const sshport = 22
-    // const sshauth = 'password,keyboard-interactive'
-
-    // let term = pty.spawn('ssh', 
-    //   [sshuser + '@' + sshhost, '-p', sshport, '-o', 'PreferredAuthentications=' + sshauth], {
-    //     name: 'xterm-256color',
-    //     cols: 80,
-    //     rows: 30
-    // }); 
-
-    // logger.debug(" PID=" + term.pid + " STARTED on behalf of user=" + sshuser)
-
-    // term.on('data', function(data) {
-    //   ws.send(data);
-    // });
-
-    // term.on('exit', function(code) {
-    //   logger.debug((new Date()) + " PID=" + term.pid + " ENDED")
-    // });
-  
     let interval = 1000*10; // 10 senconds
     let waitTimes = 3; // times to wait
 
@@ -101,4 +86,4 @@ class SocketApp {
   } // -- openConnection
 } // -- class
 
-module.exports = SocketApp
+module.exports = router
