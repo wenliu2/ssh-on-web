@@ -63,6 +63,7 @@
     "passport-jwt": "4.0.0",
     "passport-local": "1.0.0",
     "pty": "0.0.0",
+    "uuid": "3.3.2",
     "vue": "2.5.17",
     "vuetify": "1.2.5",
     "websocket": "1.0.28"

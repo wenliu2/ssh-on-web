@@ -94,6 +94,7 @@ export default {
       t.setCursorVisible(true)
       t.installKeyboard()
 
+      that.terminal = t
       /*
       t.io.print('Print a string without a newline')
       t.io.println('Print a string and add CRLF')
@@ -112,7 +113,8 @@ export default {
       connection: 'None',
       cols: 80,
       rows: 30,
-      auth: GlobalStore.auth
+      auth: GlobalStore.auth,
+      terminal: null
     }
   },
 
@@ -142,24 +144,9 @@ export default {
       })
     },
 
-    /*
-    inputConnection () {
-      const input = prompt('Enter the connection string: user@hostname', 'user@hostname')
-      if (input != null) {
-        let matchResult = input.match(/^([^\s@]+)@([^\s@]+)$/)
-        if (matchResult != null) {
-          this.connection = input
-          if (this.wsConnected) { this.ws.close() }
-          this.socketOpen({ sshhost: matchResult[2], sshuser: matchResult[1] })
-        } else {
-          alert('invalid input')
-        }
-      }
-    },
-    */
-
     socketOpen (options) {
       if (this.wsConnected) { this.ws.close() }
+      this.connection = `${options.sshuser}@${options.sshhost}`
 
       let { host, protocol } = window.location
       let wsUrl = `${protocol}//${host}/ws`.replace('http', 'ws')
@@ -167,6 +154,7 @@ export default {
       this.ws = new W3cwebsocket(wsUrl, this.auth.token)
       this.ws.onopen = () => {
         this.wsConnected = true
+        if (this.terminal) this.terminal.focus()
         this.reqSShConnect(options)
       }
       this.ws.onclose = () => {

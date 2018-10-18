@@ -10,7 +10,11 @@ function connect() {
   mongoose.connect(dbConfig.url, {
     user: dbConfig.user,
     pass: dbConfig.password,
-    useNewUrlParser: true
+    useNewUrlParser: true,
+    bufferMaxEntries: 0,
+    bufferCommands: false,
+    autoReconnect: true,
+    reconnectTries: Number.MAX_VALUE
   }, (err) => {
     logger.info(`DB info: ${dbConfig.url}, user: ${dbConfig.user}`)
     if ( err ) {

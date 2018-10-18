@@ -21,14 +21,20 @@ passport.use(new LocalStrategy({
   session: false
 }, (nt, password, cb) => {
   // simple judge, password === nt for quick development
+  // logger.debug('local stragtegy 1, UserModel: ', UserModel)
   UserModel.findOne({nt: nt}, (err, user) => {
-    logger.debug('local strategy', user)
+    // logger.debug('local strategy', user)
+    if ( !user ) {
+      logger.debug(`user not found: '${nt}'`)
+    }
     if (err) {
+      logger.error('findOne error', err)
       return cb(err, false, {message: err.message})
     }
     if (!user || user.passwordHash !== sha512(password)) {
       return cb(null, false, {message: 'User/Password mismatch'})
     }
+    logger.debug(`user login successfully. '${nt}`)
     return cb(null, {nt: user.nt}, {message: 'Logged in Successfully'})
   })
   /*
