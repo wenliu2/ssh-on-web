@@ -6,9 +6,9 @@
         <v-btn small icon class='body-2' @click.native="dialog = false">
           <v-icon small>close</v-icon>
         </v-btn>
-        <v-toolbar-title class='body-2'>Settings</v-toolbar-title>
+        <v-toolbar-title class='body-2'>Host Management</v-toolbar-title>
         <v-spacer></v-spacer>
-          <v-btn small round flat @click.native="dialog = false" class='body-2'>Save</v-btn>
+          <v-btn small round flat @click.native="dialog = false" class='body-2'>Close</v-btn>
       </v-toolbar>
         <v-container fluid>
           <v-form ref='urlForm' v-model='valid' lazy-validation>
@@ -32,7 +32,8 @@
             <template slot='items' slot-scope="props">
               <td>{{ props.item.url }}</td>
               <td>{{ props.item.group }}</td>
-              <td>{{ props.item.authType }}</td>
+              <td>{{ props.item.authType }} </td>
+              <td>{{ keyName(props.item.authType, props.item.keyHash) }} </td>
               <td class="align-center">
                 <v-icon
                   small
@@ -55,7 +56,7 @@
         </v-container>
         <v-btn @click='editorDialog=!editorDialog' class="mb-2">New Host</v-btn>
         <v-btn @click='refresh' class="mb-2">Refresh</v-btn>
-        <EditHost v-model='editorDialog' v-on:cancel='closeEditor' v-on:save='saveEditedHost' :host='editedHost'></EditHost>
+        <EditHost v-model='editorDialog' v-on:cancel='closeEditor' v-on:save='saveEditedHost' :host='editedHost' :keys='keys'></EditHost>
     </v-card>
   </v-dialog>
 </template>
@@ -71,14 +72,18 @@ export default {
     EditHost
   },
   watch: {
+    dialog (v) {
+      if ( v ) this.refresh()
+    }
   },
 
-  created () {
-    this.refresh()
+  mounted () {
+    // this.refresh()
   },
 
   data () {
     return {
+      keys: [],
       auth: GlobalStore.auth,
       defaultHost: UTILS.defaultHost(),
       editedHost: UTILS.defaultHost(),
@@ -87,45 +92,63 @@ export default {
       valid: true,
       url: '',
       hosts: [],
-      headers: [{
-        text: 'URL',
-        value: 'url'
-      }, {
-        text: 'Group',
-        value: 'group'
-      }, {
-        text: 'Auth Type',
-        value: 'authType'
-      }, {
-        text: 'Action',
-        sortable: false
-      }],
+      headers: [{ text: 'URL', value: 'url' },
+        { text: 'Group', value: 'group' },
+        { text: 'Auth Type', value: 'authType' },
+        { text: 'Key Name', value: 'key' },
+        { text: 'Action', sortable: false }],
       rules: UTILS.rules,
-      itemIndex: -1
+      itemIndex: -1,
+      defaultSSHOptions: {
+        PreferredAuthentications: 'password,keyboard-interactive',
+        ServerAliveInterval: '60'
+      }
     }
   },
   methods: {
+    keyName (authType, keyHash) {
+      if ( authType !== 'publickey' ) return 'N/A'
+      const index = this.keys.findIndex(key => keyHash === key.hash)
+      if ( index === -1 ) return 'N/A'
+      return this.keys[index].name
+    },
+
     saveURL () {
       if (this.$refs.urlForm.validate()) {
         this.dialog = false
         const userAndHost = this.url.split('@')
         const user = userAndHost[0]
         const host = userAndHost[1]
-        this.connectTo({ sshhost: host, sshuser: user })
+        const options = Object.assign(
+          {}, this.defaultSSHOptions,
+          { sshuser: user, sshhost: host })
+        this.connectTo(options)
       }
     },
 
     refresh () {
+      const headers = UTILS.fetchHeaders()
       fetch('/api/hosts', {
-        headers: UTILS.fetchHeaders(),
+        headers: headers,
         method: 'GET'
-      }).then((res) => {
-        if (res.ok) {
-          res.json().then(hosts => { this.hosts = hosts })
-        } else {
-          console.log('res:', res)
-        }
-      }).catch((err) => {
+      }).then( (res) => {
+        if (res.ok) return res.json()
+        return Promise.reject(res)
+      }).then( (hosts) => {
+        this.hosts = hosts
+      }).catch( (err) => {
+        console.error(err)
+      })
+
+      fetch('/api/keys', {
+        headers: headers,
+        method: 'GET'
+      }).then( (res) => {
+        if (res.ok) return res.json()
+        return Promise.reject(res)
+      }).then( (keys) => {
+        this.keys = keys.map( (key) => { return { name: key.name, hash: key.hash } } )
+      }).catch( (err) => {
         console.error(err)
       })
     },
@@ -135,7 +158,12 @@ export default {
       const userAndHost = item.url.split('@')
       const user = userAndHost[0]
       const host = userAndHost[1]
-      this.connectTo({ sshhost: host, sshuser: user })
+      const options = {
+        sshhost: host,
+        sshuser: user
+      }
+      options.PreferredAuthentications = item.authType
+      this.connectTo(Object.assign({}, this.defaultSSHOptions, item, options))
     },
 
     editHost (item) {
@@ -165,7 +193,7 @@ export default {
 
     saveEditedHost (host) {
       if (host.uuid && host.uuid !== '-1') {
-        // Object.assign(this.hosts[this.editedHostIndex], host)
+        // existing host, update it
         fetch('/api/host', {
           headers: UTILS.fetchHeaders(),
           body: JSON.stringify(host),
@@ -173,8 +201,8 @@ export default {
         }).then((res) => {
           if (res.ok) {
             res.json().then( uuid => {
-              const index = this.hosts.findIndex( host => host.uuid === uuid.uuid )
-              if ( index !== -1 ) Object.assign(this.hosts[index], host)
+              const index = this.hosts.findIndex( h => h.uuid === uuid.uuid )
+              if ( index !== -1 ) this.hosts.splice(index, 1, Object.assign({}, host))
             })
           } else {
             console.error('res:', res)
@@ -183,6 +211,7 @@ export default {
           console.error(err)
         })
       } else {
+        // new host, add it
         fetch('/api/host', {
           headers: UTILS.fetchHeaders(),
           body: JSON.stringify(host),

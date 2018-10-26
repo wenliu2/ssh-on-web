@@ -48,10 +48,12 @@
     "webpack-dev-server": "3.1.8"
   },
   "dependencies": {
+    "bluebird": "3.5.2",
     "body-parser": "1.18.3",
     "convict": "4.4.0",
     "express": "4.16.3",
     "express-ws": "4.0.0",
+    "fs-extra": "7.0.0",
     "hterm-umdjs": "1.4.1",
     "js-sha512": "0.8.0",
     "jsonwebtoken": "8.3.0",
@@ -63,6 +65,8 @@
     "passport-jwt": "4.0.0",
     "passport-local": "1.0.0",
     "pty": "0.0.0",
+    "tmp": "0.0.33",
+    "tmp-promise": "1.0.5",
     "uuid": "3.3.2",
     "vue": "2.5.17",
     "vuetify": "1.2.5",

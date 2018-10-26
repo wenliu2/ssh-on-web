@@ -52,14 +52,9 @@ export default {
 
 <style>
 #app {
-  /*
-  font-family: 'Droid Sans Mono for Powerline', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-  margin-top: 10px;
-  font-size: 12px;
-  */
   height: calc(100vh - 16px);
+}
+* {
+  text-transform: none !important;
 }
 </style>

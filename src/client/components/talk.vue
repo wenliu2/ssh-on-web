@@ -4,15 +4,8 @@
     <v-btn icon>
       <v-icon>list</v-icon>
     </v-btn>
-    <!--
-    <v-btn raised primary v-on:click='inputConnection' small round>SSH To</v-btn>
-    -->
     <SSHTo :connectTo='socketOpen'/>
-    <!--
-    <v-btn class='body-2' flat round small v-on:click='inputConnection'>
-      SSH To
-    </v-btn>
-    -->
+    <Keys/>
     <v-spacer></v-spacer>
     <div class='caption'> {{connection}} - {{wsConnected? "connected" : "disconnected" }} </div>
   <!--/v-system-bar-->
@@ -25,10 +18,11 @@ import { w3cwebsocket as W3cwebsocket } from 'websocket'
 import { hterm, lib } from 'hterm-umdjs'
 import GlobalStore from '../global-store'
 import SSHTo from './ssh-to/ssh-to.vue'
+import Keys from './keys/keys.vue'
 
 export default {
   components: {
-    SSHTo
+    SSHTo, Keys
   },
   mounted () {
     const that = this
@@ -138,9 +132,9 @@ export default {
         sshuser: sshuser,
         sshhost: sshhost,
         sshport: 22,
-        sshauth: 'password,keyboard-interactive',
         cols: this.cols,
-        rows: this.rows
+        rows: this.rows,
+        options
       })
     },
 

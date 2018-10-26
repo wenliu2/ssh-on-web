@@ -1,6 +1,10 @@
 const express = require('express')
 const logger = require('./logger')('websocket')
 const pty = require('pty')
+const file = require('tmp-promise').file
+const fs = require('fs-extra')
+const Promise = require('bluebird')
+const UserModel = require('./db/').UserModel
 
 const router = express.Router()
 router.ws('/', (ws, req) => {
@@ -63,16 +67,14 @@ class SocketApp {
     })
   } // -- connectionHandler
 
-  openConnection(clientOptions) {
-    const {sshuser, sshhost, sshport, sshauth, cols, rows} = clientOptions
-
-    this.term = pty.spawn('ssh', 
-      [sshuser + '@' + sshhost, '-p', sshport, '-o', 'PreferredAuthentications=' + sshauth], {
+  pty(sshArgs, clientOptions) {
+    const {sshuser, cols, rows} = clientOptions
+    this.term = pty.spawn('ssh', sshArgs, {
         name: 'xterm-256color',
         cols: cols,
         rows: rows
     }); 
-
+    
     logger.debug(" PID=" + this.term.pid + " STARTED on behalf of user=" + sshuser)
 
     this.term.on('data', (data) => {
@@ -83,6 +85,57 @@ class SocketApp {
       logger.debug((new Date()) + " PID=" + this.term.pid + " ENDED")
       this.ws.close()
     });
+  }
+
+  openConnection(clientOptions) {
+    logger.debug("clientOptions:", clientOptions)
+    const {sshuser, sshhost, sshport, options} = clientOptions
+
+    const sshArgs = [sshuser + '@' + sshhost, '-p', sshport]
+    if (options.PreferredAuthentications) {
+      sshArgs.push('-o', 'PreferredAuthentications=' + options.PreferredAuthentications)
+    }
+    
+    if (options.ServerAliveInterval) {
+      sshArgs.push('-o', 'ServerAliveInterval=' + options.ServerAliveInterval)
+    }
+
+    if (options.PreferredAuthentications === 'publickey') {
+      const hash = options.keyHash
+      let path = ''
+      let cleanup = false
+      const filePromise = file({mode: 0o600, prefix: 'ssh-on-web-', postfix: '.key'})
+      const keyContentPromise = new Promise( (resolve, reject) => {
+        UserModel.findOne({nt: this.req.user.nt, 'keys.hash': hash}, {'keys.privatekey':1, keys: {$elemMatch: {hash, hash}}}, (err, doc) => {
+        // UserModel.find({"keys.hash": hash }, {'keys.hash':1, 'keys.privatekey':1, 'keys.name': 1}, (err, doc) => {
+          if ( err ) return reject(err)
+          if ( !doc ) return reject(new Error('unknown key'))
+          resolve(doc.keys[0].privatekey)
+        })
+      })
+
+      Promise.all([filePromise, keyContentPromise])
+      .then(results => {
+        // logger.debug("results: ", results)
+        const o = results[0]
+        const keyResult = results[1]
+
+        cleanup = o.cleanup
+
+        path = o.path
+        return fs.write(o.fd, keyResult)
+      }).then((x) => {
+        sshArgs.push('-i', `${path}`)
+        this.pty(sshArgs, clientOptions)
+      }).catch(err => {
+        logger.error("err:", err)
+        this.ws.send((`${err.name}: ${err.message}`))
+      }).finally(() => {
+        if ( cleanup ) setTimeout(cleanup, 3000000) //tmp file deleted after 5 mins
+      })
+    } else {
+      this.pty(sshArgs, clientOptions)
+    }
   } // -- openConnection
 } // -- class
 

@@ -11,10 +11,10 @@
             </v-toolbar>
             <v-card-text>
               <v-form>
-                <v-text-field prepend-icon="person" name="login" label="Login" type="text" v-model='nt'></v-text-field>
-                <v-text-field id="password" prepend-icon="lock" name="password" label="Password" type="password" v-model='password'></v-text-field>
+                <v-text-field prepend-icon="person" name="nt" label="Login" type="text" v-model='nt' autofocus></v-text-field>
+                <v-text-field prepend-icon="lock" name="password" label="Password" type="password" v-model='password'></v-text-field>
               </v-form>
-                <v-alert :value='errorMsg !== ""' color='error' icon='warning' outline>Username/Password mismatch.</v-alert>
+              <v-alert :value='errorMsg !== ""' color='error' icon='warning' outline>Username/Password mismatch.</v-alert>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>

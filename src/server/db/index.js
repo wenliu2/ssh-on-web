@@ -14,11 +14,13 @@ function connect() {
     bufferMaxEntries: 0,
     bufferCommands: false,
     autoReconnect: true,
-    reconnectTries: Number.MAX_VALUE
+    reconnectTries: Number.MAX_VALUE,
+    connectTimeoutMS: 10000
   }, (err) => {
     logger.info(`DB info: ${dbConfig.url}, user: ${dbConfig.user}`)
     if ( err ) {
       logger.error('Connect to mongo failed!')
+      setTimeout(connect, 5000)
     } else {
       logger.info('Connect to mongo successfully!')
       /*

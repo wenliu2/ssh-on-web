@@ -12,14 +12,24 @@ const UserSchema = new Schema({
       uuid: String,
       url: String,
       group: String,
-      authType: String
-    }]
+      authType: String,
+      keyHash: String
+    }],
+    keys: [
+      {
+        hash: String,
+        name: String,
+        description: String,
+        privatekey: String
+      }
+    ]
   },
   {bufferCommands: false}
 )
 
 UserSchema.index({nt: 1}, {unique: true})
-
+UserSchema.index({nt: 1, "keys.hash": 1}, {unique: true})
+UserSchema.index({nt: 1, "hosts.uuid": 1}, {unique: true})
 
 const UserModel =  mongoose.model("user", UserSchema)
 module.exports = UserModel

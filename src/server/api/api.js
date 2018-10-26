@@ -4,16 +4,7 @@ const router = express.Router()
 const logger = require('../logger')('api')
 const UserModel = require('../db').UserModel
 const uuidv1 = require('uuid/v1');
-
-const mockHosts = [{
-  url: 'wenliu2@localhost',
-  group: 'localhost',
-  type: 'password'
-}, {
-  url: 'wenliu2@proxy-lw01-2630460.lvs02.dev.ebayc3.com',
-  group: 'proxy',
-  type: 'password'
-}]
+const sha512 = require('js-sha512')
 
 router.use((req, resp, next) => {
   const start = new Date();
@@ -73,7 +64,7 @@ router.post('/host', (req, res) => {
   const user = req.user
   const host = req.body 
 
-  UserModel.update({nt: user.nt, "hosts.uuid": host.uuid}, {$set: {"hosts.$[]": host}}, 
+  UserModel.update({nt: user.nt, "hosts.uuid": host.uuid}, {$set: {"hosts.$": host}}, 
     (err, raw) => {
       if (err){
         res.status(500).json(err)
@@ -81,6 +72,48 @@ router.post('/host', (req, res) => {
         res.json({uuid: host.uuid})
       }
     })
+})
+
+// --------------------- key apis ----------------
+router.put('/key', (req, res) => {
+  const user = req.user
+  const key = req.body
+
+  logger.debug("key: ", key)
+  key.hash = sha512(key.privatekey)
+  UserModel.findOne({nt: user.nt, 'keys.hash': key.hash}, (err, doc) => {
+    if ( err ) return res.status(500).json(err)
+    if (doc) return res.status(409).json({message: 'resource already exists'})
+    UserModel.update({nt: user.nt}, {$addToSet: {keys: key}}, (err, raw) => {
+      if (err) return res.status(500).json(err)
+      res.json({hash: key.hash})
+    })
+  })
+})
+router.get('/keys', (req, res) => {
+  const user = req.user
+  UserModel.findOne({nt: user.nt}, 'keys', (err, doc) => {
+    if (err) return res.status(500).json(err)
+    doc['keys'].forEach(key => {
+      key.privatekey = '***'
+    })
+    res.json(doc['keys'])
+  })
+})
+
+// delete key
+router.delete('/key/:hash', (req,res) => {
+  const user = req.user
+  const hash = req.params['hash']
+
+  UserModel.update({nt: req.user.nt}, {$pull: {keys: {hash: hash}}}, 
+    (err, raw) => {
+      if (err){
+        res.status(500).json(err)
+      } else {
+        res.json({hash: hash})
+      }
+  })
 })
 
 router.get('/login-status', (req, res) => {

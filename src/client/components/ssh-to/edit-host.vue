@@ -20,7 +20,10 @@
            ></v-text-field>
          </v-flex>
          <v-flex xs12 sm6 md4>
-           <v-text-field v-model="editHost.authType" label="Auth Type"></v-text-field>
+           <v-select v-model="editHost.authType" label="Auth Type" :items='authTypeList'></v-select>
+         </v-flex>
+         <v-flex xs12 sm6 md4 v-if='editHost.authType === "publickey"'>
+           <v-select v-model="editHost.keyHash" label='Key' :items='keys' item-text='name' item-value='hash'></v-select>
          </v-flex>
        </v-layout>
        </v-form>
@@ -37,10 +40,10 @@
 <script lang='babel'>
 import UTILS from '../../utils/utils'
 export default {
-  props: ['value', 'host'],
+  props: ['value', 'host', 'keys'],
   watch: {
     host ( v ) {
-      this.editHost = Object.assign({}, v)
+      this.editHost = JSON.parse(JSON.stringify(v)) // Object.assign({}, v)
     }
   },
   methods: {
@@ -63,6 +66,7 @@ export default {
   },
   data () {
     return {
+      authTypeList: UTILS.authTypeList,
       valid: true,
       editHost: UTILS.defaultHost(),
       rules: UTILS.rules
