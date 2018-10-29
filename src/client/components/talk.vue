@@ -127,11 +127,13 @@ export default {
     },
 
     reqSShConnect (options) {
-      const { sshuser, sshhost } = options
+      const { sshuser, sshhost, sshport } = options
+      let port = 22
+      if (sshport !== null) port = sshport
       this.sendMessage('connect', {
         sshuser: sshuser,
         sshhost: sshhost,
-        sshport: 22,
+        sshport: port,
         cols: this.cols,
         rows: this.rows,
         options
