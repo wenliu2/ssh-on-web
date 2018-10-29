@@ -1,6 +1,7 @@
 const logger = require('./logger')('passport')
 const passport = require('passport')
 const passportJWT = require('passport-jwt')
+const config = require('./config')
 
 const extractJWT = passportJWT.ExtractJwt
 
@@ -11,8 +12,11 @@ const sha512 = require('js-sha512')
 
 const UserModel = db.UserModel
 
+const jwtSecret = config.get("passport.jwt_secret")
+
+logger.debug(`jwtSecret = ${jwtSecret}`)
 const PASSPORT_CONFIG = {
-  JWT_SECRET: '12345678'
+  JWT_SECRET: jwtSecret
 }
 
 passport.use(new LocalStrategy({

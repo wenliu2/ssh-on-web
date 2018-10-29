@@ -21,6 +21,14 @@ var config = convict({
     env: "PORT",
     arg: "port"
   },
+  passport: {
+    jwt_secret: {
+      doc: "The secret for JWT service",
+      format: String,
+      default: "qwe123",
+      env: "JWT_SECRET"
+    }
+  },
   db: {
     url: {
       doc: "db connect string",

@@ -1,4 +1,7 @@
 {
-  "port": 8080
+  "port": 8080,
+  "passport": {
+    "jwt_secret": "qwe123asd"
+  }
 }
 
