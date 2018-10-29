@@ -6,7 +6,7 @@ export default {
     return pattern.test(value) || 'Invalid e-mail.'
   },
   sshurl: value => {
-    const pattern = /^([^@<>\s,;:]+)@(([a-zA-Z\-0-9]+)(\.[a-zA-Z\-0-9_]+)*)$/
+    const pattern = /^([^@<>\s,;:]+)@(([a-zA-Z\-0-9]+)(\.[a-zA-Z\-0-9_]+)*)(:\d{1,5})?$/
     return pattern.test(value) || 'Invalid ssh url.'
   },
   privatekey: value => {

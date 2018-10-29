@@ -14,7 +14,7 @@
           <v-form ref='urlForm' v-model='valid' lazy-validation>
           <v-layout row wrap align-center>
             <v-flex xs12 sm6 md6>
-              <v-text-field prepend-icon="security" label='SSH To' :counter='100' v-model='url' required placeholder="user@hostname"
+              <v-text-field prepend-icon="security" label='SSH To' :counter='100' v-model='url' required placeholder="user@hostname:port"
               :rules='[rules.required, rules.counter(100), rules.sshurl]'/>
             </v-flex>
             <v-flex xs12 sm6 md6 align-center>
@@ -116,12 +116,13 @@ export default {
     saveURL () {
       if (this.$refs.urlForm.validate()) {
         this.dialog = false
-        const userAndHost = this.url.split('@')
+        const userAndHost = this.url.split(/(?:[@:]+)/)
         const user = userAndHost[0]
         const host = userAndHost[1]
+        const port = userAndHost[2] || null
         const options = Object.assign(
           {}, this.defaultSSHOptions,
-          { sshuser: user, sshhost: host })
+          { sshuser: user, sshhost: host, sshport: port })
         this.connectTo(options)
       }
     },
