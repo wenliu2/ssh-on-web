@@ -5,6 +5,7 @@ const logger = require('../logger')('api')
 const UserModel = require('../db').UserModel
 const uuidv1 = require('uuid/v1');
 const sha512 = require('js-sha512')
+const encryptor = require('../encrypt')
 
 router.use((req, resp, next) => {
   const start = new Date();
@@ -79,8 +80,10 @@ router.put('/key', (req, res) => {
   const user = req.user
   const key = req.body
 
-  logger.debug("key: ", key)
+  // logger.debug("key: ", key)
+  key.privatekey = encryptor.encrypt(key.privatekey)
   key.hash = sha512(key.privatekey)
+
   UserModel.findOne({nt: user.nt, 'keys.hash': key.hash}, (err, doc) => {
     if ( err ) return res.status(500).json(err)
     if (doc) return res.status(409).json({message: 'resource already exists'})

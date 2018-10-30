@@ -30,6 +30,12 @@ var config = convict({
     }
   },
   db: {
+    key_secret: {
+      doc: "The secret to protect user defined keys",
+      format: String,
+      default: "304bccc8724e70f1ec532fa516367194",
+      env: "KEY_SECRET"
+    },
     url: {
       doc: "db connect string",
       format: '*',

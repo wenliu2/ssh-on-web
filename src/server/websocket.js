@@ -5,6 +5,7 @@ const file = require('tmp-promise').file
 const fs = require('fs-extra')
 const Promise = require('bluebird')
 const UserModel = require('./db/').UserModel
+const encryptor = require('./encrypt')
 
 const router = express.Router()
 router.ws('/', (ws, req) => {
@@ -118,7 +119,7 @@ class SocketApp {
       .then(results => {
         // logger.debug("results: ", results)
         const o = results[0]
-        const keyResult = results[1]
+        const keyResult = encryptor.decrypt(results[1])
 
         cleanup = o.cleanup
 

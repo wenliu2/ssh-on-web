@@ -112,14 +112,17 @@ export default {
       if ( index === -1 ) return 'N/A'
       return this.keys[index].name
     },
-
+    parseSSHUrl (url) {
+      const userAndHost = url.split(/(?:[@:]+)/)
+      const user = userAndHost[0]
+      const host = userAndHost[1]
+      const port = userAndHost[2] || '22'
+      return { user, host, port }
+    },
     saveURL () {
       if (this.$refs.urlForm.validate()) {
         this.dialog = false
-        const userAndHost = this.url.split(/(?:[@:]+)/)
-        const user = userAndHost[0]
-        const host = userAndHost[1]
-        const port = userAndHost[2] || null
+        const { user, host, port } = this.parseSSHUrl(this.url)
         const options = Object.assign(
           {}, this.defaultSSHOptions,
           { sshuser: user, sshhost: host, sshport: port })
@@ -156,12 +159,11 @@ export default {
 
     selectURL (item) {
       this.dialog = false
-      const userAndHost = item.url.split('@')
-      const user = userAndHost[0]
-      const host = userAndHost[1]
+      const { user, host, port } = this.parseSSHUrl(item.url)
       const options = {
         sshhost: host,
-        sshuser: user
+        sshuser: user,
+        sshport: port
       }
       options.PreferredAuthentications = item.authType
       this.connectTo(Object.assign({}, this.defaultSSHOptions, item, options))

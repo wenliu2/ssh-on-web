@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+if [ $# -ne 1 ]; then
+  echo "Usage: $0 image:tag"
+  exit -1
+fi
+PWD=`cd $(dirname $0);pwd`
+cd $PWD
+
+IT=$1
+
+docker build -t ${IT} .
