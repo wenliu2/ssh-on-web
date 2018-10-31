@@ -1,6 +1,7 @@
 
 const mongoose = require('mongoose')
-const config = require('../config')
+// const config = require('../config')
+import config from '../config'
 const logger = require('../logger')('mongo')
 
 const dbConfig = config.get('db')

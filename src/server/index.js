@@ -1,4 +1,5 @@
-const config = require('./config')
+// const config = require('./config')
+import config  from './config'
 const express = require('express');
 const logger = require('./logger')('main')
 
@@ -16,7 +17,6 @@ const bodyParser = require('body-parser')
 
 const db = require('./db/')
 
-logger.debug('dbCofnig:', db.dbConfig)
 //---------------------
 //serve static contents
 //---------------------

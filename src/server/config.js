@@ -61,4 +61,5 @@ config.loadFile('./config/' + env + '.json');
 // Perform validation
 config.validate({allowed: 'strict'});
 
-module.exports = config;
+// module.exports = config;
+export default config
