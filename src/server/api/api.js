@@ -1,10 +1,14 @@
-const express = require('express')
-const os = require('os')
+// const express = require('express')
+import express from 'express'
+// const os = require('os')
+import os from 'os'
 const router = express.Router()
-const logger = require('../logger')('api')
+import LOGGER from '../logger'
+const logger = LOGGER.logger('api')
 const UserModel = require('../db').UserModel
 const uuidv1 = require('uuid/v1');
-const sha512 = require('js-sha512')
+// const sha512 = require('js-sha512')
+import sha512 from 'js-sha512'
 const encryptor = require('../encrypt')
 
 router.use((req, resp, next) => {
@@ -126,3 +130,4 @@ router.get('/login-status', (req, res) => {
 })
 
 module.exports = router;
+// export default router;

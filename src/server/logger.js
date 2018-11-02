@@ -8,4 +8,5 @@ function logger(category, level) {
   return logger;
 }
 
-module.exports = logger;
+// module.exports = logger;
+export default { logger };

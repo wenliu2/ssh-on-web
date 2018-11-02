@@ -1,5 +1,6 @@
 const express = require('express')
-const logger = require('./logger')('websocket')
+import LOGGER from './logger'
+const logger = LOGGER.logger('websocket')
 const pty = require('pty')
 const file = require('tmp-promise').file
 const fs = require('fs-extra')

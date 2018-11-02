@@ -1,4 +1,5 @@
-const logger = require('./logger')('passport')
+import LOGGER from './logger'
+const logger = LOGGER.logger('passport')
 const passport = require('passport')
 const passportJWT = require('passport-jwt')
 // const config = require('./config')

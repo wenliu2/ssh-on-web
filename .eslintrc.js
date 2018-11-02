@@ -8,5 +8,12 @@ module.exports = {
       // override/add rules settings here, such as:
       // 'vue/no-unused-vars': 'error'
       "space-in-parens": 'off'
+    },
+    parserOptions: {
+      "parser": "babel-eslint",
+      "parserOptions": {
+        "sourceType": "module",
+        "allowImportExportEverywhere": true
+      }
     }
 };

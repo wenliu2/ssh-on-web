@@ -1,12 +1,13 @@
 // const config = require('./config')
 import config  from './config'
 const express = require('express');
-const logger = require('./logger')('main')
+// const logger = require('./logger')('main')
+import LOGGER from './logger'
+const logger = LOGGER.logger('main')
 
-require('./passport-config')
 const passport = require('passport')
 
-const api = require('./api/api')
+import api from './api/api'
 
 const app = express();
 const expressWs = require('express-ws')(app)
@@ -15,7 +16,7 @@ const ws = require('./websocket')
 const auth = require('./auth')
 const bodyParser = require('body-parser')
 
-const db = require('./db/')
+import db from './db/'
 
 //---------------------
 //serve static contents

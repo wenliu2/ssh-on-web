@@ -1,8 +1,8 @@
-const express = require('express')
-const passport = require('passport')
+import express from 'express'
+import passport from 'passport'
 const jwtSecret = require('./passport-config').JWT_SECRET
-const db = require('./db')
-const sha512 = require('js-sha512')
+import db from './db'
+import sha512 from 'js-sha512'
 
 const router = express.Router()
 const jwt = require('jsonwebtoken')

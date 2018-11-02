@@ -2,10 +2,12 @@
 const mongoose = require('mongoose')
 // const config = require('../config')
 import config from '../config'
-const logger = require('../logger')('mongo')
+// const logger = require('../logger')('mongo')
+import LOGGER from '../logger'
+const logger = LOGGER.logger('mongo')
 
 const dbConfig = config.get('db')
-const UserModel = require('./user-model')
+import UserModel from './user-model'
 
 function connect() {
   mongoose.connect(dbConfig.url, {
@@ -24,15 +26,6 @@ function connect() {
       setTimeout(connect, 5000)
     } else {
       logger.info('Connect to mongo successfully!')
-      /*
-      const user01 = new UserModel()
-      user01.nt = 'wenliu2'
-      user01.createDt = new Date()
-      user01.otherOptions = {
-        name: 'Wen Liu'
-      }
-      user01.save()
-      */
     }
   })
 }
