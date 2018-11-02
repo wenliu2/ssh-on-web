@@ -73,11 +73,6 @@ export default {
             that.cols = columns
             that.rows = rows
             that.sendMessage('resize', { col: columns, row: rows })
-            /*
-            if (that.wsConnected) {
-              that.ws.send(JSON.stringify({ op: 'resize', data: { col: columns, row: rows } }))
-            }
-            */
           }
 
           // You can call io.push() to foreground a fresh io context, which can
@@ -93,12 +88,6 @@ export default {
         t.installKeyboard()
 
         that.terminal = t
-        /*
-        t.io.print('Print a string without a newline')
-        t.io.println('Print a string and add CRLF')
-        t.io.println('Print a string and add CRLF')
-        */
-        // that.socketOpen()
       }) // -- lib.init
     })
   },
