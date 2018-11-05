@@ -15,7 +15,7 @@
 </template>
 <script lang='babel'>
 import { w3cwebsocket as W3cwebsocket } from 'websocket'
-// import { hterm, lib } from 'hterm-umdjs'
+import { hterm, lib } from 'hterm-umdjs'
 import GlobalStore from '../global-store'
 import SSHTo from './ssh-to/ssh-to.vue'
 import Keys from './keys/keys.vue'
@@ -25,19 +25,15 @@ export default {
     SSHTo, Keys
   },
   mounted () {
-    const that = this
-
-    import(/* webpackChunkName: "hterm" */ 'hterm-umdjs').then( module => {
-      const hterm = module.hterm
-      const lib = module.lib
-      hterm.defaultStorage = new lib.Storage.Local()
-      lib.init(function () {
+    function initHterm (that, hterm1, lib1) {
+      hterm1.defaultStorage = new lib1.Storage.Local()
+      lib1.init(function () {
         // opt_profileName is the name of the terminal profile to load, or "default" if
         // not specified.  If you're using one of the persistent storage
         // implementations then this will scope all preferences read/writes to this
         // name.
         const optProfileName = 'default'
-        const t = new hterm.Terminal(optProfileName)
+        const t = new hterm1.Terminal(optProfileName)
         t.prefs_.set('alt-sends-what', '8-bit')
         // to support non-ascii,  ex: Chinese
         t.prefs_.set('send-encoding', 'raw')
@@ -89,7 +85,16 @@ export default {
 
         that.terminal = t
       }) // -- lib.init
-    })
+    }
+
+    initHterm(this, hterm, lib)
+
+    // const that = this
+    // import(/* webpackChunkName: "hterm" */ 'hterm-umdjs').then( module => {
+    //  const hterm = module.hterm
+    //  const lib = module.lib
+    //  initHterm(that, hterm, lib)
+    // })
   },
 
   data () {

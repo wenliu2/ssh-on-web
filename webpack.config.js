@@ -14,14 +14,20 @@ function config_func(devMode) {
     entry: './src/client/index.js',
     output: {
       path: path.join(__dirname, outputDirectory),
-      filename: 'bundle.js'
+      //filename: 'bundle.js'
+      filename: '[name].[contenthash].js',
     },
     optimization: {
+      runtimeChunk: 'single',
       splitChunks: {
-        // Must be specified for HtmlWebpackPlugin to work correctly.
-        // See: https://github.com/jantimon/html-webpack-plugin/issues/882
-        chunks: 'all',
-      },
+        cacheGroups: {
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendors',
+            chunks: 'all'
+          }
+        }
+      }
     },
     module: {
       rules: [

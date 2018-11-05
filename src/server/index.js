@@ -5,6 +5,8 @@ const express = require('express');
 import LOGGER from './logger'
 const logger = LOGGER.logger('main')
 
+import compression from 'compression'
+
 const passport = require('passport')
 
 import api from './api/api'
@@ -18,6 +20,9 @@ const bodyParser = require('body-parser')
 
 import db from './db/'
 
+// gzip
+app.use(compression())
+
 //---------------------
 //serve static contents
 //---------------------
@@ -26,6 +31,7 @@ app.use(express.static('dist'));
 app.use(bodyParser.json({ type: 'application/json' }))
 app.use(bodyParser.urlencoded({extended: true}))
 app.disable('x-powered-by');
+
 
 //---------------------
 //api part
