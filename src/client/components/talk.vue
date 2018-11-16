@@ -7,6 +7,9 @@
     <SSHTo :connectTo='socketOpen'/>
     <Keys/>
     <v-spacer></v-spacer>
+    <v-btn v-on:click='logout' icon>
+      <v-icon>arrow_back</v-icon>
+    </v-btn>
     <div class='caption'> {{connection}} - {{wsConnected? "connected" : "disconnected" }} </div>
   <!--/v-system-bar-->
   </v-toolbar>
@@ -82,7 +85,6 @@ export default {
         t.setCursorPosition(0, 0)
         t.setCursorVisible(true)
         t.installKeyboard()
-
         that.terminal = t
       }) // -- lib.init
     }
@@ -112,6 +114,11 @@ export default {
   },
 
   methods: {
+    logout () {
+      this.auth.logout()
+      this.auth.clearToken()
+    },
+
     addMessage (msg) {
       this.messages.push(msg)
       this.messages = this.messages.slice(-10)

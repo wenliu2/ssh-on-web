@@ -25,34 +25,46 @@
 
           <v-subheader>Hosts</v-subheader>
           <v-divider></v-divider>
-          <v-data-table
-            :items='hosts'
-            :headers='headers'
-          >
-            <template slot='items' slot-scope="props">
-              <td>{{ props.item.url }}</td>
-              <td>{{ props.item.group }}</td>
-              <td>{{ props.item.authType }} </td>
-              <td>{{ keyName(props.item.authType, props.item.keyHash) }} </td>
-              <td class="align-center">
-                <v-icon
-                  small
-                  class="mr-2"
-                  v-on:click='editHost(props.item)'
-                > edit </v-icon>
-                <v-icon
-                  small
-                  class="mr-2"
-                  v-on:click='deleteHost(props.item)'
-                > delete </v-icon>
-                <v-icon
-                  small
-                  class="mr-2"
-                  v-on:click='selectURL(props.item)'
-                > done </v-icon>
-              </td>
-            </template>
-          </v-data-table>
+          <v-card>
+            <v-card-title>
+              <v-spacer/><v-spacer/><v-spacer/><v-spacer/>
+              <v-text-field
+                v-model="search"
+                append-icon="search"
+                label=""
+                single-line
+                hide-details></v-text-field>
+            </v-card-title>
+
+           <v-data-table :items='hosts' :headers='headers' :search="search" hide-actions :loading='backendLoading'>
+             <template slot='items' slot-scope="props">
+               <td>{{ props.item.url }}</td>
+               <td>{{ props.item.group }}</td>
+               <td>{{ props.item.authType }} </td>
+               <td>{{ keyName(props.item.authType, props.item.keyHash) }} </td>
+               <td class="align-center">
+                 <v-icon
+                   small
+                   class="mr-2"
+                   v-on:click='editHost(props.item)'
+                 > edit </v-icon>
+                 <v-icon
+                   small
+                   class="mr-2"
+                   v-on:click='deleteHost(props.item)'
+                 > delete </v-icon>
+                 <v-icon
+                   small
+                   class="mr-2"
+                   v-on:click='selectURL(props.item)'
+                 > done </v-icon>
+               </td>
+             </template>
+             <v-alert dark slot="no-results" :value="true" color="warning" icon="warning">
+              Your search for "{{ search }}" found no results.
+             </v-alert>
+           </v-data-table>
+          </v-card>
         </v-container>
         <v-btn @click='editorDialog=!editorDialog' class="mb-2">New Host</v-btn>
         <v-btn @click='refresh' class="mb-2">Refresh</v-btn>
@@ -83,6 +95,8 @@ export default {
 
   data () {
     return {
+      backendLoading: false,
+      search: '',
       keys: [],
       auth: GlobalStore.auth,
       defaultHost: UTILS.defaultHost(),
@@ -126,12 +140,14 @@ export default {
         const options = Object.assign(
           {}, this.defaultSSHOptions,
           { sshuser: user, sshhost: host, sshport: port })
+        document.title = this.url
         this.connectTo(options)
       }
     },
 
     refresh () {
       const headers = UTILS.fetchHeaders()
+      this.backendLoading = true
       fetch('/api/hosts', {
         headers: headers,
         method: 'GET'
@@ -139,8 +155,10 @@ export default {
         if (res.ok) return res.json()
         return Promise.reject(res)
       }).then( (hosts) => {
+        this.backendLoading = false
         this.hosts = hosts
       }).catch( (err) => {
+        this.backendLoading = false
         console.error(err)
       })
 
@@ -151,8 +169,10 @@ export default {
         if (res.ok) return res.json()
         return Promise.reject(res)
       }).then( (keys) => {
+        this.backendLoading = false
         this.keys = keys.map( (key) => { return { name: key.name, hash: key.hash } } )
       }).catch( (err) => {
+        this.backendLoading = false
         console.error(err)
       })
     },
@@ -166,6 +186,7 @@ export default {
         sshport: port
       }
       options.PreferredAuthentications = item.authType
+      document.title = item.url
       this.connectTo(Object.assign({}, this.defaultSSHOptions, item, options))
     },
 
@@ -176,10 +197,12 @@ export default {
 
     deleteHost (item) {
       if (confirm('Are you sure you want to delete this item?')) {
+        this.backendLoading = true
         fetch(`/api/host/${item.uuid}`, {
           headers: UTILS.fetchHeaders(),
           method: 'DELETE'
         }).then(res => {
+          this.backendLoading = false
           if (res.ok) {
             res.json().then(uuid => {
               const index = this.hosts.findIndex(host => uuid.uuid === host.uuid)
@@ -189,12 +212,14 @@ export default {
             console.error(res)
           }
         }).catch( err => {
+          this.backendLoading = false
           console.error(err)
         })
       }
     },
 
     saveEditedHost (host) {
+      this.backendLoading = true
       if (host.uuid && host.uuid !== '-1') {
         // existing host, update it
         fetch('/api/host', {
@@ -202,6 +227,7 @@ export default {
           body: JSON.stringify(host),
           method: 'POST'
         }).then((res) => {
+          this.backendLoading = false
           if (res.ok) {
             res.json().then( uuid => {
               const index = this.hosts.findIndex( h => h.uuid === uuid.uuid )
@@ -211,6 +237,7 @@ export default {
             console.error('res:', res)
           }
         }).catch((err) => {
+          this.backendLoading = false
           console.error(err)
         })
       } else {
@@ -220,12 +247,14 @@ export default {
           body: JSON.stringify(host),
           method: 'PUT'
         }).then((res) => {
+          this.backendLoading = false
           if (res.ok) {
             res.json().then(host => this.hosts.push(host))
           } else {
             console.error('res:', res)
           }
         }).catch((err) => {
+          this.backendLoading = false
           console.error(err)
         })
       }
