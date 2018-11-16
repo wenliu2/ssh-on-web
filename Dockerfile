@@ -1,5 +1,5 @@
-#FROM node:8.12.0-jessie
-FROM liuwen1976/ssh-on-web:1.0.1
+FROM node:8.12.0-jessie
+# FROM liuwen1976/ssh-on-web:1.0.1
 
 EXPOSE 8080
 
