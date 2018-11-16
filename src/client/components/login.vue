@@ -105,9 +105,7 @@ export default {
 
   watch: {
     signUpModal: function (val) {
-      if (!val) {
-        this.errorMsg = ''
-      }
+      this.errorMsg = ''
     }
   },
 
