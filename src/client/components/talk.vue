@@ -22,6 +22,7 @@ import { hterm, lib } from 'hterm-umdjs'
 import GlobalStore from '../global-store'
 import SSHTo from './ssh-to/ssh-to.vue'
 import Keys from './keys/keys.vue'
+import ls from 'local-storage'
 
 export default {
   components: {
@@ -116,6 +117,7 @@ export default {
   methods: {
     logout () {
       this.auth.logout()
+      ls('token', '')
       this.auth.clearToken()
     },
 
