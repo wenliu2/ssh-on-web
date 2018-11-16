@@ -41,7 +41,8 @@ export default {
         t.prefs_.set('alt-sends-what', '8-bit')
         // to support non-ascii,  ex: Chinese
         t.prefs_.set('send-encoding', 'raw')
-        t.prefs_.set('font-family', 'Droid Sans Mono for Powerline, Helvetica, Arial, sans-serif')
+        // t.prefs_.set('font-family', 'Droid Sans Mono for Powerline, Helvetica, Arial, sans-serif')
+        t.prefs_.set('font-family', 'courier new, Helvetica, Arial, sans-serif')
         t.prefs_.set('font-size', '12px')
 
         t.onTerminalReady = () => {
