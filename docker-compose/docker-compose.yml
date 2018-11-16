@@ -5,10 +5,12 @@ services:
     volumes:
       - /data/db/mongo:/data/db
   ssh-on-web:
-    image: ecr.vip.ebayc3.com/wenliu2/ssh-on-web:1.0.1
+    image: ecr.vip.ebayc3.com/wenliu2/ssh-on-web:1.0.6
     volumes:
       - /data/ssh-on-web/config:/ssh-on-web/config
     depends_on:
       - mongodb
     ports:
-      - "8080:8080"
+      - "18081:8080"
+    environment:
+      - NODE_ENV=production

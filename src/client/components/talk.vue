@@ -82,7 +82,6 @@ export default {
         t.setCursorPosition(0, 0)
         t.setCursorVisible(true)
         t.installKeyboard()
-
         that.terminal = t
       }) // -- lib.init
     }
