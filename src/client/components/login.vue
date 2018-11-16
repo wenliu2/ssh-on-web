@@ -106,6 +106,17 @@ export default {
   watch: {
     signUpModal: function (val) {
       this.errorMsg = ''
+      this.nt = ''
+      this.password = ''
+      this.verifiedPassword = ''
+    },
+
+    errorMsg: function (val) {
+      if (val !== '') {
+        setTimeout(() => {
+          this.errorMsg = ''
+        }, 1000)
+      }
     }
   },
 
@@ -125,8 +136,8 @@ export default {
         })
       }).then((res) => {
         if (res.ok) {
-          this.signUpModal = false
           this.login()
+          this.signUpModal = false
         } else {
           this.nt = ''
           this.password = ''
