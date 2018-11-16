@@ -10,5 +10,4 @@ cd $PWD
 IT=$1
 
 docker build -t ${IT} .
-docker login -u 'victor2333' -p 'private007'
 docker push ${IT}
