@@ -119,7 +119,13 @@ router.delete('/key/:hash', (req,res) => {
       if (err){
         res.status(500).json(err)
       } else {
-        res.json({hash: hash})
+        UserModel.update({nt: req.user.nt, 'hosts.keyHash': hash}, {$set: {'hosts.$.authType': 'password', 'hosts.$.keyHash': ''}}, (err, raw) => {
+          if (err){
+            res.status(500).json(err)
+          } else {
+            res.json({hash: hash})
+          }
+        })
       }
   })
 })
