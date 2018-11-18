@@ -5,7 +5,7 @@ services:
     volumes:
       - /data/db/mongo:/data/db
   ssh-on-web:
-    image: victor2333/ssh-on-web:1.0.1
+    image: victor2333/ssh-on-web:latest
     volumes:
       - /data/ssh-on-web/config:/ssh-on-web/config
     depends_on:
