@@ -12,5 +12,11 @@ export default {
   privatekey: value => {
     const pattern = /^-----BEGIN RSA PRIVATE KEY-----\r?\n([A-Za-z0-9+/=]{64}\r?\n){0,100}[A-Za-z0-9+/=]{0,64}\r?\n-----END RSA PRIVATE KEY-----\r?\n?$/
     return pattern.test(value) || 'Invalid format of key'
+  },
+  password: value => {
+    return value.length >= 8 || 'Min 8 characters'
+  },
+  verifiedPassword: value => {
+    return value.length >= 8 || 'Min 8 characters'
   }
 }

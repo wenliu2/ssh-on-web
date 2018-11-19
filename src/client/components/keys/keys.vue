@@ -28,11 +28,11 @@
             <v-list-tile-sub-title> {{ key.description }} </v-list-tile-sub-title>
           </v-list-tile-content>
 
-           <v-list-tile-action>
-              <v-btn icon ripple>
-                <v-icon small>edit</v-icon>
-              </v-btn>
-            </v-list-tile-action>
+           <!-- <v-list-tile-action> -->
+              <!-- <v-btn icon ripple> -->
+                <!-- <v-icon small>edit</v-icon> -->
+              <!-- </v-btn> -->
+            <!-- </v-list-tile-action> -->
            <v-list-tile-action>
               <v-btn icon ripple @click='deleteKey(key)'>
                 <v-icon small>delete</v-icon>

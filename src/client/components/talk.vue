@@ -7,6 +7,9 @@
     <SSHTo :connectTo='socketOpen'/>
     <Keys/>
     <v-spacer></v-spacer>
+    <v-btn v-on:click='logout' icon>
+      <v-icon>arrow_back</v-icon>
+    </v-btn>
     <div class='caption'> {{connection}} - {{wsConnected? "connected" : "disconnected" }} </div>
   <!--/v-system-bar-->
   </v-toolbar>
@@ -19,6 +22,7 @@ import { hterm, lib } from 'hterm-umdjs'
 import GlobalStore from '../global-store'
 import SSHTo from './ssh-to/ssh-to.vue'
 import Keys from './keys/keys.vue'
+import ls from 'local-storage'
 
 export default {
   components: {
@@ -37,7 +41,7 @@ export default {
         t.prefs_.set('alt-sends-what', '8-bit')
         // to support non-ascii,  ex: Chinese
         t.prefs_.set('send-encoding', 'raw')
-        t.prefs_.set('font-family', 'Droid Sans Mono for Powerline, Helvetica, Arial, sans-serif')
+        t.prefs_.set('font-family', 'Droid Sans Mono for Powerline, courier new, Helvetica, Arial, sans-serif')
         t.prefs_.set('font-size', '12px')
 
         t.onTerminalReady = () => {
@@ -111,6 +115,12 @@ export default {
   },
 
   methods: {
+    logout () {
+      this.auth.logout()
+      ls('token', '')
+      this.auth.clearToken()
+    },
+
     addMessage (msg) {
       this.messages.push(msg)
       this.messages = this.messages.slice(-10)
