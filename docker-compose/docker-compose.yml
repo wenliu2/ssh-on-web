@@ -4,6 +4,7 @@ services:
     image: victor2333/mongo:4.1.4-xenial
     volumes:
       - /data/db/mongo:/data/db
+    restart: always
   ssh-on-web:
     image: victor2333/ssh-on-web:latest
     volumes:
@@ -14,3 +15,4 @@ services:
       - "127.0.0.1:8080:8080"
     environment:
       - NODE_ENV=production
+    restart: always
