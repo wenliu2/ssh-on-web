@@ -4,6 +4,8 @@ services:
     image: ecr.vip.ebayc3.com/wenliu2/mongo:4.1.4-xenial
     volumes:
       - /data/db/mongo:/data/db
+    ports:
+      - "27017:27017"
   ssh-on-web:
     image: ecr.vip.ebayc3.com/wenliu2/ssh-on-web:1.0.6
     volumes:

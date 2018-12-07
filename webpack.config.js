@@ -75,6 +75,7 @@ function config_func(devMode) {
       proxy: {
         '/api': 'http://localhost:8080',
         '/auth': 'http://localhost:8080',
+        '/metrics': 'http://localhost:8080',
         '/ws': {
           target: 'ws://localhost:8080',
           ws: true
