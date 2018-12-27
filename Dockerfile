@@ -14,6 +14,5 @@ WORKDIR /ssh-on-web
 COPY --from=ssh-on-web-build /ssh-on-web/dist /ssh-on-web/dist
 COPY --from=ssh-on-web-build /ssh-on-web/compiled /ssh-on-web/compiled
 COPY --from=ssh-on-web-build /ssh-on-web/node_modules /ssh-on-web/node_modules
-RUN ls -la /ssh-on-web
 EXPOSE 8080
 ENTRYPOINT [ "node","compiled/server/index.js" ]
