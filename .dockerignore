@@ -2,3 +2,5 @@
 Dockerfile
 .dockerignore
 **/*.swp
+package-lock.json
+**/.git
