@@ -7,11 +7,16 @@
     <SSHTo :connectTo='socketOpen'/>
     <Keys/>
     <v-spacer></v-spacer>
-    <v-btn v-on:click='logout' icon>
-      <v-icon>arrow_back</v-icon>
-    </v-btn>
-    <div class='caption'> {{connection}} - {{wsConnected? "connected" : "disconnected" }} </div>
-  <!--/v-system-bar-->
+    <span style="padding-right: 10px">{{connection}} </span>
+    <v-icon small color="green" v-if="wsConnected">wifi_tethering</v-icon>
+    <v-icon small color="red" v-if="!wsConnected">portable_wifi_off</v-icon>
+    <v-btn small round v-on:click='connectToggle' v-if="connection != ''">{{wsConnected? "Disconnect" : "Reconnect" }}</v-btn>
+    <v-tooltip bottom>
+      <v-btn v-on:click='logout' icon slot="activator">
+        <v-icon>exit_to_app</v-icon>
+      </v-btn>
+      <span>sign out</span>
+    </v-tooltip>
   </v-toolbar>
   <div style='text-align: left; position: relative; min-height: calc(100vh - 50px);' ref='termDiv'> </div>
 </v-app>
@@ -106,11 +111,12 @@ export default {
       ws: null,
       wsConnected: false,
       io: null,
-      connection: 'None',
+      connection: '',
       cols: 80,
       rows: 30,
       auth: GlobalStore.auth,
-      terminal: null
+      terminal: null,
+      options: {}
     }
   },
 
@@ -150,6 +156,7 @@ export default {
 
     socketOpen (options) {
       if (this.wsConnected) { this.ws.close() }
+      this.options = options
       this.connection = `${options.sshuser}@${options.sshhost}`
 
       let { host, protocol } = window.location
@@ -174,7 +181,7 @@ export default {
 
     connectToggle () {
       if (this.wsConnected) this.ws.close()
-      else this.socketOpen()
+      else this.socketOpen(this.options)
     }
   }
 }
