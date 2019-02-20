@@ -20,6 +20,12 @@ const bodyParser = require('body-parser')
 
 import db from './db/'
 
+/**
+ * This creates the module that we created in the step before.
+ * In my case it is stored in the util folder.
+ */
+var Prometheus = require('./metrics');
+
 // gzip
 app.use(compression())
 
@@ -33,6 +39,21 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.disable('x-powered-by');
 
 
+/**
+ * The below arguments start the counter functions
+ */
+app.use(Prometheus.requestCounters);  
+app.use(Prometheus.responseCounters);
+
+/**
+ * Enable metrics endpoint
+ */
+Prometheus.injectMetricsRoute(app);
+/**
+ * Enable collection of default metrics
+ */
+Prometheus.startCollection();
+
 //---------------------
 //api part
 //--------------------
@@ -42,6 +63,7 @@ app.use('/auth', auth)
 
 // register websocket
 app.use('/ws', passport.authenticate('jwt', {session: false}), ws)
+
 
 // start server
 const port = config.get('port');
