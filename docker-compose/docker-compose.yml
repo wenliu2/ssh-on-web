@@ -6,8 +6,8 @@ services:
       - /data/db/mongo:/data/db
     restart: always
   ssh-on-web:
-    # image: victor2333/ssh-on-web:latest
-    build: ../
+    image: victor2333/ssh-on-web:latest
+    # build: ../
     volumes:
       - /data/ssh-on-web/config:/ssh-on-web/config
     depends_on:
