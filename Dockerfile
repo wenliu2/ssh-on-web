@@ -8,7 +8,7 @@ WORKDIR /ssh-on-web
 COPY . /ssh-on-web
 RUN npm install && npm run build
 
-FROM node:8.12.0-alpine
+FROM node:8.12.0-jessie
 RUN mkdir -p /ssh-on-web
 WORKDIR /ssh-on-web
 COPY --from=ssh-on-web-build /ssh-on-web/dist /ssh-on-web/dist
