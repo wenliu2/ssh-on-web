@@ -41,7 +41,7 @@ var config = convict({
       doc: "db connect string",
       format: '*',
       default: 'mongodb://localhost:27017/toolsdb',
-      env: "MONGDB_URL"
+      env: "MONGODB_URL"
     },
     user: {
       doc: "DB user name",
@@ -64,8 +64,6 @@ var env = config.get('env');
 if (fs.existsSync('./config/' + env + '.json')) {
   config.loadFile('./config/' + env + '.json');
 }
-
-console.log(config)
 
 // Perform validation
 config.validate({ allowed: 'strict' });
