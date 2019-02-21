@@ -2,9 +2,9 @@ pipeline {
   agent any
 
   stages {
-    stage('Test') {
+    stage('Build docker') {
       steps {
-        sh './docker.build victor2333/ssh-on-web 1.0.2'
+        sh './build.docker victor2333/ssh-on-web 1.0.2'
       }
     }
   }
