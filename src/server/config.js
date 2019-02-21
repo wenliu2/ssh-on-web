@@ -40,17 +40,20 @@ var config = convict({
     url: {
       doc: "db connect string",
       format: '*',
-      default: 'mongodb://localhost:27017/toolsdb'
+      default: 'mongodb://localhost:27017/toolsdb',
+      env: "MONGODB_URL"
     },
     user: {
       doc: "DB user name",
       format: String,
-      default: 'toolsuser'
+      default: 'toolsuser',
+      env: "MONGODB_USER"
     },
     password: {
       doc: "DB password",
       format: String,
-      default: '12345678'
+      default: '12345678',
+      env: "MONGODB_PASSWD"
     }
   }
 });
@@ -61,8 +64,6 @@ var env = config.get('env');
 if (fs.existsSync('./config/' + env + '.json')) {
   config.loadFile('./config/' + env + '.json');
 }
-
-console.log(config)
 
 // Perform validation
 config.validate({ allowed: 'strict' });

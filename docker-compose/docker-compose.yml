@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   mongodb:
     image: ecr.vip.ebayc3.com/wenliu2/mongo:4.1.4-xenial
