@@ -65,8 +65,6 @@ if (fs.existsSync('./config/' + env + '.json')) {
   config.loadFile('./config/' + env + '.json');
 }
 
-console.log(config.getEnv('MONGODB_URL'))
-
 // Perform validation
 config.validate({ allowed: 'strict' });
 
