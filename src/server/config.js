@@ -1,4 +1,5 @@
 const convict = require('convict')
+const fs = require('fs')
 
 // Define a schema
 var config = convict({
@@ -56,10 +57,15 @@ var config = convict({
 
 // Load environment dependent configuration
 var env = config.get('env');
-config.loadFile('./config/' + env + '.json');
+
+if (fs.existsSync('./config/' + env + '.json')) {
+  config.loadFile('./config/' + env + '.json');
+}
+
+console.log(config)
 
 // Perform validation
-config.validate({allowed: 'strict'});
+config.validate({ allowed: 'strict' });
 
 // module.exports = config;
 export default config
