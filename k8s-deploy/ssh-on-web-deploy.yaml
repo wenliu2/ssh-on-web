@@ -5,7 +5,7 @@ metadata:
   labels:
     app: ssh-on-web
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: ssh-on-web
@@ -17,6 +17,7 @@ spec:
       containers:
         - name: ssh-on-web
           image: victor2333/ssh-on-web:latest
+          imagePullPolicy: "Always"
           env:
             - name: NODE_ENV
               value: production
