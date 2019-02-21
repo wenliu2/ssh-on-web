@@ -7,5 +7,6 @@ pipeline {
         sh './docker.build victor2333/ssh-on-web 1.0.2'
       }
     }
+  }
 }
 
