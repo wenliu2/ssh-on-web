@@ -40,17 +40,20 @@ var config = convict({
     url: {
       doc: "db connect string",
       format: '*',
-      default: 'mongodb://localhost:27017/toolsdb'
+      default: 'mongodb://localhost:27017/toolsdb',
+      env: "MONGDB_URL"
     },
     user: {
       doc: "DB user name",
       format: String,
-      default: 'toolsuser'
+      default: 'toolsuser',
+      env: "MONGODB_USER"
     },
     password: {
       doc: "DB password",
       format: String,
-      default: '12345678'
+      default: '12345678',
+      env: "MONGODB_PASSWD"
     }
   }
 });
