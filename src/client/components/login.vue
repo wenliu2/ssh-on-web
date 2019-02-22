@@ -28,12 +28,6 @@
                     @keyup.enter="login"
                   ></v-text-field>
                 </v-form>
-                <v-alert
-                  :value="errorMsg !== ''"
-                  color="error"
-                  icon="warning"
-                  outline
-                >{{ this.errorMsg }}</v-alert>
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -62,15 +56,9 @@
                         label="Verfied Password"
                         counter
                         @click:append="vVPwd = !vVPwd"
-                        @keyup.enter="login"
+                        @keyup.enter="signUp"
                       ></v-text-field>
                     </v-card-text>
-                    <v-alert
-                      :value="errorMsg !== ''"
-                      color="error"
-                      icon="warning"
-                      outline
-                    >{{ this.errorMsg }}</v-alert>
                     <v-card-actions>
                       <v-spacer></v-spacer>
                       <v-btn color="primary" flat @click="signUpModal = false">Cancel</v-btn>
@@ -82,6 +70,12 @@
               </v-card-actions>
             </v-card>
           </v-flex>
+          <v-dialog v-model="errorMsgOpen" max-width="290">
+            <v-card>
+              <v-card-title class="headline">Error</v-card-title>
+              <v-card-text>{{ this.errorMsg }}</v-card-text>
+            </v-card>
+          </v-dialog>
         </v-layout>
       </v-container>
     </v-content>
@@ -103,7 +97,8 @@ export default {
       vPwd: false,
       vVPwd: false,
       rules: UTILS.rules,
-      signUpModal: false
+      signUpModal: false,
+      errorMsgOpen: false
     }
   },
 
@@ -117,8 +112,10 @@ export default {
 
     errorMsg: function (val) {
       if (val !== '') {
+        this.errorMsgOpen = true
         setTimeout(() => {
           this.errorMsg = ''
+          this.errorMsgOpen = false
         }, 1000)
       }
     }
