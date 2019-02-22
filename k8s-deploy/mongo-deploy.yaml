@@ -17,6 +17,7 @@ spec:
       containers:
         - name: ssh-on-web-mongodb
           image: mongo:4.1.8-xenial
+          args: ["--auth"]
           env:
             - name: MONGO_INITDB_ROOT_USERNAME
               value: toolsuser
