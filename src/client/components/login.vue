@@ -143,14 +143,16 @@ export default {
           this.nt = ''
           this.password = ''
           this.verifiedPassword = ''
-          this.errorMsg = 'Sign Up Failed'
+          return res.json()
         }
+      }).then((data) => {
+        this.errorMsg = data.error
       }).catch((err) => {
         console.log('err', err)
         this.nt = ''
         this.password = ''
         this.verifiedPassword = ''
-        this.errorMsg = 'Sign Up Failed'
+        this.errorMsg = err
       })
     },
 
@@ -171,9 +173,11 @@ export default {
             this.auth.login()
           })
         } else {
-          this.errorMsg = 'Username/Password mismatch.'
           this.auth.logout()
+          return res.json()
         }
+      }).then((err) => {
+        this.errorMsg = err.message
       }).catch((err) => {
         console.log('err', err)
         this.errorMsg = 'Login failed.'
