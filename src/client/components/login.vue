@@ -139,6 +139,7 @@ export default {
         if (res.ok) {
           this.login()
           this.signUpModal = false
+          return ''
         } else {
           this.nt = ''
           this.password = ''
@@ -172,6 +173,7 @@ export default {
             ls('token', json.token)
             this.auth.login()
           })
+          return ''
         } else {
           this.auth.logout()
           return res.json()
