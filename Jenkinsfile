@@ -6,12 +6,14 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Build Docker') {
-            def customImage = docker.build("victor2333/ssh-on-web:1.0.2")
-        }
-        stage('Push Docker Image') {
-            customImage.push()
-            customImage.push('latest')
+        stage('Build Docker And Push') {
+            steps {
+                script {
+                    def customImage = docker.build("victor2333/ssh-on-web:1.0.2")
+                    customImage.push()
+                    customImage.push("latest")
+                }
+            }
         }
     }
 }
