@@ -16,13 +16,8 @@ spec:
     spec:
       containers:
         - name: ssh-on-web-mongodb
-          image: mongo:4.1.8-xenial
+          image: victor2333/ssh-on-web-mongo:1.0.$BUILD_NUMBER
           args: ["--auth"]
-          env:
-            - name: MONGO_INITDB_ROOT_USERNAME
-              value: toolsuser
-            - name: MONGO_INITDB_ROOT_PASSWORD
-              value: "12345678"
           ports:
             - containerPort: 27017
           volumeMounts:
