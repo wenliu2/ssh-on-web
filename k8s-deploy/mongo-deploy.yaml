@@ -18,6 +18,9 @@ spec:
         - name: ssh-on-web-mongodb
           image: victor2333/ssh-on-web-mongo:1.0.$BUILD_NUMBER
           args: ["--auth"]
+          env:
+            - name: MONGO_INITDB_DATABASE
+            - value: toolsdb
           ports:
             - containerPort: 27017
           volumeMounts:
