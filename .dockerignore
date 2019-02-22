@@ -1,5 +1,4 @@
 **/node_modules
-Dockerfile
 .dockerignore
 **/*.swp
 package-lock.json
