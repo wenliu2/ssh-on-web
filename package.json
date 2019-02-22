@@ -75,7 +75,7 @@
     "passport-jwt": "4.0.0",
     "passport-local": "1.0.0",
     "prom-client": "11.2.0",
-    "pty": "0.0.0",
+    "node-pty": "0.8.1",
     "response-time": "2.3.2",
     "simple-encryptor": "2.0.0",
     "tmp": "0.0.33",
