@@ -21,7 +21,7 @@ spec:
             - name: MONGO_INITDB_ROOT_USERNAME
               value: toolsuser
             - name: MONGO_INITDB_ROOT_PASSWORD
-              value: 12345678
+              value: "12345678"
           ports:
             - containerPort: 27017
           volumeMounts:
