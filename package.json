@@ -23,7 +23,7 @@
     "@babel/core": "7.1.0",
     "@babel/plugin-syntax-dynamic-import": "7.0.0",
     "@babel/preset-env": "7.1.0",
-    "ajv": "6.5.3",
+    "ajv": "6.9.1",
     "babel-eslint": "9.0.0",
     "babel-loader": "8.0.2",
     "babel-minify-webpack-plugin": "0.3.1",
@@ -50,8 +50,8 @@
     "style-loader": "0.23.0",
     "uglifyjs-webpack-plugin": "2.0.1",
     "url-loader": "1.1.1",
-    "vue-loader": "15.4.2",
-    "vue-template-compiler": "2.5.17",
+    "vue-loader": "15.6.4",
+    "vue-template-compiler": "2.6.7",
     "webpack": "4.19.1",
     "webpack-cli": "3.1.0",
     "webpack-dev-server": "3.1.8"
@@ -81,8 +81,8 @@
     "tmp": "0.0.33",
     "tmp-promise": "1.0.5",
     "uuid": "3.3.2",
-    "vue": "2.5.17",
-    "vuetify": "1.2.5",
+    "vue": "2.6.7",
+    "vuetify": "1.5.2",
     "websocket": "1.0.28"
   }
 }

@@ -1,74 +1,85 @@
 <template>
-  <v-dialog dark v-model='dialog' fullscreen hide-overlay transition='dialog-bottom-transition'>
-    <v-btn slot='activator' class='body-2' flat round small> SSH to </v-btn>
+  <v-dialog dark v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
+    <v-btn slot="activator" class="body-2" flat round small>SSH to</v-btn>
     <v-card>
       <v-toolbar dense>
-        <v-btn small icon class='body-2' @click.native="dialog = false">
+        <v-btn small icon class="body-2" @click.native="dialog = false">
           <v-icon small>close</v-icon>
         </v-btn>
-        <v-toolbar-title class='body-2'>Host Management</v-toolbar-title>
+        <v-toolbar-title class="body-2">Host Management</v-toolbar-title>
         <v-spacer></v-spacer>
-          <v-btn small round flat @click.native="dialog = false" class='body-2'>Close</v-btn>
+        <v-btn small round flat @click.native="dialog = false" class="body-2">Close</v-btn>
       </v-toolbar>
-        <v-container fluid>
-          <v-form ref='urlForm' v-model='valid' lazy-validation>
+      <v-container fluid>
+        <v-form ref="urlForm" v-model="valid" lazy-validation>
           <v-layout row wrap align-center>
             <v-flex xs12 sm6 md6>
-              <v-text-field prepend-icon="security" label='SSH To' :counter='100' v-model='url' required placeholder="user@hostname:port"
-              :rules='[rules.required, rules.counter(100), rules.sshurl]'/>
+              <v-text-field
+                prepend-icon="security"
+                label="SSH To"
+                :counter="100"
+                v-model="url"
+                required
+                placeholder="user@hostname:port"
+                :rules="[rules.required, rules.counter(100), rules.sshurl]"
+                @keyup.enter="saveURL"
+              />
+              <input>
             </v-flex>
             <v-flex xs12 sm6 md6 align-center>
-              <v-btn small round v-on:click='saveURL'>Connect</v-btn>
+              <v-btn small round @click="saveURL">Connect</v-btn>
             </v-flex>
           </v-layout>
-          </v-form>
+        </v-form>
 
-          <v-subheader>Hosts</v-subheader>
-          <v-divider></v-divider>
-          <v-card>
-            <v-card-title>
-              <v-spacer/><v-spacer/><v-spacer/><v-spacer/>
-              <v-text-field
-                v-model="search"
-                append-icon="search"
-                label=""
-                single-line
-                hide-details></v-text-field>
-            </v-card-title>
+        <v-subheader>Hosts</v-subheader>
+        <v-divider></v-divider>
+        <v-card>
+          <v-card-title>
+            <v-spacer/>
+            <v-spacer/>
+            <v-spacer/>
+            <v-spacer/>
+            <v-text-field v-model="search" append-icon="search" label single-line hide-details></v-text-field>
+          </v-card-title>
 
-           <v-data-table :items='hosts' :headers='headers' :search="search" hide-actions :loading='backendLoading'>
-             <template slot='items' slot-scope="props">
-               <td>{{ props.item.url }}</td>
-               <td>{{ props.item.group }}</td>
-               <td>{{ props.item.authType }} </td>
-               <td>{{ keyName(props.item.authType, props.item.keyHash) }} </td>
-               <td class="align-center">
-                 <v-icon
-                   small
-                   class="mr-2"
-                   v-on:click='editHost(props.item)'
-                 > edit </v-icon>
-                 <v-icon
-                   small
-                   class="mr-2"
-                   v-on:click='deleteHost(props.item)'
-                 > delete </v-icon>
-                 <v-icon
-                   small
-                   class="mr-2"
-                   v-on:click='selectURL(props.item)'
-                 > done </v-icon>
-               </td>
-             </template>
-             <v-alert dark slot="no-results" :value="true" color="warning" icon="warning">
-              Your search for "{{ search }}" found no results.
-             </v-alert>
-           </v-data-table>
-          </v-card>
-        </v-container>
-        <v-btn @click='editorDialog=!editorDialog' class="mb-2">New Host</v-btn>
-        <v-btn @click='refresh' class="mb-2">Refresh</v-btn>
-        <EditHost v-model='editorDialog' v-on:cancel='closeEditor' v-on:save='saveEditedHost' :host='editedHost' :keys='keys'></EditHost>
+          <v-data-table
+            :items="hosts"
+            :headers="headers"
+            :search="search"
+            hide-actions
+            :loading="backendLoading"
+          >
+            <template slot="items" slot-scope="props">
+              <td>{{ props.item.url }}</td>
+              <td>{{ props.item.group }}</td>
+              <td>{{ props.item.authType }}</td>
+              <td>{{ keyName(props.item.authType, props.item.keyHash) }}</td>
+              <td class="align-center">
+                <v-icon small class="mr-2" v-on:click="editHost(props.item)">edit</v-icon>
+                <v-icon small class="mr-2" v-on:click="deleteHost(props.item)">delete</v-icon>
+                <v-icon small class="mr-2" v-on:click="selectURL(props.item)">done</v-icon>
+              </td>
+            </template>
+            <v-alert
+              dark
+              slot="no-results"
+              :value="true"
+              color="warning"
+              icon="warning"
+            >Your search for "{{ search }}" found no results.</v-alert>
+          </v-data-table>
+        </v-card>
+      </v-container>
+      <v-btn @click="editorDialog=!editorDialog" class="mb-2">New Host</v-btn>
+      <v-btn @click="refresh" class="mb-2">Refresh</v-btn>
+      <EditHost
+        v-model="editorDialog"
+        v-on:cancel="closeEditor"
+        v-on:save="saveEditedHost"
+        :host="editedHost"
+        :keys="keys"
+      ></EditHost>
     </v-card>
   </v-dialog>
 </template>
