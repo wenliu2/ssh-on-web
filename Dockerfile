@@ -1,4 +1,5 @@
 FROM node:8.12.0-onbuild AS ssh-on-web-build
+RUN npm install -g yarn
 # FROM victor2333/ssh-on-web:1.0.1
 
 # EXPOSE 8080
@@ -6,7 +7,7 @@ FROM node:8.12.0-onbuild AS ssh-on-web-build
 RUN mkdir -p /ssh-on-web
 WORKDIR /ssh-on-web
 COPY . /ssh-on-web
-RUN npm install && npm run build
+RUN yarn && yarn build
 
 FROM node:8.12.0-jessie
 RUN mkdir -p /ssh-on-web
