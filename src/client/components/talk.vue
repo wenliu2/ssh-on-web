@@ -23,10 +23,7 @@
         <span>sign out</span>
       </v-tooltip>
     </v-toolbar>
-    <div
-      style="text-align: left; position: relative; min-height: calc(100vh - 50px);"
-      ref="termDiv"
-    ></div>
+    <div style="text-align: left; position: relative; height: 100%;" ref="termDiv"></div>
   </v-app>
 </template>
 <script>
