@@ -116,7 +116,6 @@ export default {
 
   data() {
     return {
-      messages: ["msg1", "msg2"],
       ws: null,
       wsConnected: false,
       io: null,
@@ -134,11 +133,6 @@ export default {
       this.auth.logout();
       ls("token", "");
       this.auth.clearToken();
-    },
-
-    addMessage(msg) {
-      this.messages.push(msg);
-      this.messages = this.messages.slice(-10);
     },
 
     sendMessage(op, data) {
@@ -181,14 +175,14 @@ export default {
       };
       this.ws.onclose = () => {
         this.wsConnected = false;
-        this.io.writeUTF16("Remotion connection closed.");
+        this.io.println("Remotion connection closed.");
       };
       this.ws.onerror = () => {
         this.ws.close();
       };
 
       this.ws.onmessage = msg => {
-        this.io.writeUTF16(msg.data);
+        this.io.print(msg.data);
       };
     },
 
