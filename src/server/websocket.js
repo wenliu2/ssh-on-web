@@ -59,7 +59,7 @@ class SocketApp {
     this.ws.on('close', () => {
       logger.debug('closed')
       // term.end()
-      this.term.destroy()
+      if (this.term) this.term.destroy()
       clearInterval(pingLoop);
     })
 
@@ -131,7 +131,8 @@ class SocketApp {
           this.pty(sshArgs, clientOptions)
         }).catch(err => {
           logger.error("err:", err)
-          this.ws.send((`${err.name}: ${err.message}`))
+          this.ws.send((`${err.name}: ${err.message}\r\n`))
+          this.ws.close()
         }).finally(() => {
           if (cleanup) setTimeout(cleanup, 3000000) //tmp file deleted after 5 mins
         })
