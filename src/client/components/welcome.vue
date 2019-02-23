@@ -1,12 +1,12 @@
 <template>
-<div>
-  <h1>Welcome, {{name}}!</h1>
-</div>
+  <div>
+    <h1>Welcome, {{name}}!</h1>
+  </div>
 </template>
-<script lang='babel'>
+<script>
 export default {
   props: {
     name: { type: String }
   }
-}
+};
 </script>

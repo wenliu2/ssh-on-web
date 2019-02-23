@@ -1,25 +1,25 @@
 const store = {
   auth: {
     isLogin: false,
-    token: '',
+    token: "",
 
-    login () {
-      console.log('this:', this)
-      this.isLogin = true
+    login() {
+      console.log("this:", this);
+      this.isLogin = true;
     },
-    logout () {
-      this.isLogin = false
+    logout() {
+      this.isLogin = false;
     },
-    setToken (newValue) {
-      this.token = newValue
+    setToken(newValue) {
+      this.token = newValue;
     },
-    clearToken () {
-      this.token = ''
+    clearToken() {
+      this.token = "";
     }
   },
   state: {
 
   }
-}
+};
 
-export default store
+export default store;

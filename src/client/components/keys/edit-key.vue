@@ -41,36 +41,37 @@
     </v-card>
   </v-dialog>
 </template>
-<script lang='babel'>
-import UTILS from '../../utils/utils'
+
+<script>
+import UTILS from "../../utils/utils";
 export default {
-  props: ['value', 'inputKey'],
+  props: ["value", "inputKey"],
   watch: {
-    inputKey (nk) {
-      this.editKey = Object.assign({}, nk)
-      this.$refs.form.reset()
+    inputKey(nk) {
+      this.editKey = Object.assign({}, nk);
+      this.$refs.form.reset();
     }
   },
   methods: {
-    valueChange (v) {
-      this.$emit('input', v)
+    valueChange(v) {
+      this.$emit("input", v);
     },
-    cancel () {
-      this.$emit('input', false)
+    cancel() {
+      this.$emit("input", false);
     },
-    save () {
-      if ( this.$refs.form.validate()) {
-        this.$emit('input', false)
-        this.$emit('save', Object.assign({}, this.editKey))
+    save() {
+      if (this.$refs.form.validate()) {
+        this.$emit("input", false);
+        this.$emit("save", Object.assign({}, this.editKey));
       }
     }
   },
-  data () {
+  data() {
     return {
       valid: true,
       editKey: Object.assign({}, UTILS.defaultKey()),
       rules: UTILS.rules
-    }
+    };
   }
-}
+};
 </script>

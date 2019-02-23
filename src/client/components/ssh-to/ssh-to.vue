@@ -83,10 +83,11 @@
     </v-card>
   </v-dialog>
 </template>
-<script lang='babel'>
-import EditHost from './edit-host.vue'
-import UTILS from '../../utils/utils'
-import GlobalStore from '../../global-store'
+
+<script>
+import EditHost from "./edit-host.vue";
+import UTILS from "../../utils/utils";
+import GlobalStore from "../../global-store";
 export default {
   props: {
     connectTo: Function
@@ -95,19 +96,19 @@ export default {
     EditHost
   },
   watch: {
-    dialog (v) {
-      if ( v ) this.refresh()
+    dialog(v) {
+      if (v) this.refresh();
     }
   },
 
-  mounted () {
+  mounted() {
     // this.refresh()
   },
 
-  data () {
+  data() {
     return {
       backendLoading: false,
-      search: '',
+      search: "",
       keys: [],
       auth: GlobalStore.auth,
       defaultHost: UTILS.defaultHost(),
@@ -115,169 +116,193 @@ export default {
       editorDialog: false,
       dialog: false,
       valid: true,
-      url: '',
+      url: "",
       hosts: [],
-      headers: [{ text: 'URL', value: 'url' },
-        { text: 'Group', value: 'group' },
-        { text: 'Auth Type', value: 'authType' },
-        { text: 'Key Name', value: 'key' },
-        { text: 'Action', sortable: false }],
+      headers: [
+        { text: "URL", value: "url" },
+        { text: "Group", value: "group" },
+        { text: "Auth Type", value: "authType" },
+        { text: "Key Name", value: "key" },
+        { text: "Action", sortable: false }
+      ],
       rules: UTILS.rules,
       itemIndex: -1,
       defaultSSHOptions: {
-        PreferredAuthentications: 'password,keyboard-interactive',
-        ServerAliveInterval: '60'
+        PreferredAuthentications: "password,keyboard-interactive",
+        ServerAliveInterval: "60"
       }
-    }
+    };
   },
   methods: {
-    keyName (authType, keyHash) {
-      if ( authType !== 'publickey' ) return 'N/A'
-      const index = this.keys.findIndex(key => keyHash === key.hash)
-      if ( index === -1 ) return 'N/A'
-      return this.keys[index].name
+    keyName(authType, keyHash) {
+      if (authType !== "publickey") return "N/A";
+      const index = this.keys.findIndex(key => keyHash === key.hash);
+      if (index === -1) return "N/A";
+      return this.keys[index].name;
     },
-    parseSSHUrl (url) {
-      const userAndHost = url.split(/(?:[@:]+)/)
-      const user = userAndHost[0]
-      const host = userAndHost[1]
-      const port = userAndHost[2] || '22'
-      return { user, host, port }
+
+    parseSSHUrl(url) {
+      const userAndHost = url.split(/(?:[@:]+)/);
+      const user = userAndHost[0];
+      const host = userAndHost[1];
+      const port = userAndHost[2] || "22";
+      return { user, host, port };
     },
-    saveURL () {
+
+    saveURL() {
       if (this.$refs.urlForm.validate()) {
-        this.dialog = false
-        const { user, host, port } = this.parseSSHUrl(this.url)
-        const options = Object.assign(
-          {}, this.defaultSSHOptions,
-          { sshuser: user, sshhost: host, sshport: port })
-        document.title = this.url
-        this.connectTo(options)
+        this.dialog = false;
+        const { user, host, port } = this.parseSSHUrl(this.url);
+        const options = Object.assign({}, this.defaultSSHOptions, {
+          sshuser: user,
+          sshhost: host,
+          sshport: port
+        });
+        document.title = this.url;
+        this.connectTo(options);
       }
     },
 
-    refresh () {
-      const headers = UTILS.fetchHeaders()
-      this.backendLoading = true
-      fetch('/api/hosts', {
+    refresh() {
+      const headers = UTILS.fetchHeaders();
+      this.backendLoading = true;
+      fetch("/api/hosts", {
         headers: headers,
-        method: 'GET'
-      }).then( (res) => {
-        if (res.ok) return res.json()
-        return Promise.reject(res)
-      }).then( (hosts) => {
-        this.backendLoading = false
-        this.hosts = hosts
-      }).catch( (err) => {
-        this.backendLoading = false
-        console.error(err)
+        method: "GET"
       })
+        .then(res => {
+          if (res.ok) return res.json();
+          return Promise.reject(res);
+        })
+        .then(hosts => {
+          this.backendLoading = false;
+          this.hosts = hosts;
+        })
+        .catch(err => {
+          this.backendLoading = false;
+          console.error(err);
+        });
 
-      fetch('/api/keys', {
+      fetch("/api/keys", {
         headers: headers,
-        method: 'GET'
-      }).then( (res) => {
-        if (res.ok) return res.json()
-        return Promise.reject(res)
-      }).then( (keys) => {
-        this.backendLoading = false
-        this.keys = keys.map( (key) => { return { name: key.name, hash: key.hash } } )
-      }).catch( (err) => {
-        this.backendLoading = false
-        console.error(err)
+        method: "GET"
       })
+        .then(res => {
+          if (res.ok) return res.json();
+          return Promise.reject(res);
+        })
+        .then(keys => {
+          this.backendLoading = false;
+          this.keys = keys.map(key => {
+            return { name: key.name, hash: key.hash };
+          });
+        })
+        .catch(err => {
+          this.backendLoading = false;
+          console.error(err);
+        });
     },
 
-    selectURL (item) {
-      this.dialog = false
-      const { user, host, port } = this.parseSSHUrl(item.url)
+    selectURL(item) {
+      this.dialog = false;
+      const { user, host, port } = this.parseSSHUrl(item.url);
       const options = {
         sshhost: host,
         sshuser: user,
         sshport: port
-      }
-      options.PreferredAuthentications = item.authType
-      document.title = item.url
-      this.connectTo(Object.assign({}, this.defaultSSHOptions, item, options))
+      };
+      options.PreferredAuthentications = item.authType;
+      document.title = item.url;
+      this.connectTo(Object.assign({}, this.defaultSSHOptions, item, options));
     },
 
-    editHost (item) {
-      this.editedHost = Object.assign({}, item)
-      this.editorDialog = true
+    editHost(item) {
+      this.editedHost = Object.assign({}, item);
+      this.editorDialog = true;
     },
 
-    deleteHost (item) {
-      if (confirm('Are you sure you want to delete this item?')) {
-        this.backendLoading = true
+    deleteHost(item) {
+      if (confirm("Are you sure you want to delete this item?")) {
+        this.backendLoading = true;
         fetch(`/api/host/${item.uuid}`, {
           headers: UTILS.fetchHeaders(),
-          method: 'DELETE'
-        }).then(res => {
-          this.backendLoading = false
-          if (res.ok) {
-            res.json().then(uuid => {
-              const index = this.hosts.findIndex(host => uuid.uuid === host.uuid)
-              if ( index !== -1 ) this.hosts.splice(index, 1)
-            })
-          } else {
-            console.error(res)
-          }
-        }).catch( err => {
-          this.backendLoading = false
-          console.error(err)
+          method: "DELETE"
         })
+          .then(res => {
+            this.backendLoading = false;
+            if (res.ok) {
+              res.json().then(uuid => {
+                const index = this.hosts.findIndex(
+                  host => uuid.uuid === host.uuid
+                );
+                if (index !== -1) this.hosts.splice(index, 1);
+              });
+            } else {
+              console.error(res);
+            }
+          })
+          .catch(err => {
+            this.backendLoading = false;
+            console.error(err);
+          });
       }
     },
 
-    saveEditedHost (host) {
-      this.backendLoading = true
-      if (host.uuid && host.uuid !== '-1') {
+    saveEditedHost(host) {
+      this.backendLoading = true;
+      if (host.uuid && host.uuid !== "-1") {
         // existing host, update it
-        fetch('/api/host', {
+        fetch("/api/host", {
           headers: UTILS.fetchHeaders(),
           body: JSON.stringify(host),
-          method: 'POST'
-        }).then((res) => {
-          this.backendLoading = false
-          if (res.ok) {
-            res.json().then( uuid => {
-              const index = this.hosts.findIndex( h => h.uuid === uuid.uuid )
-              if ( index !== -1 ) this.hosts.splice(index, 1, Object.assign({}, host))
-            })
-          } else {
-            console.error('res:', res)
-          }
-        }).catch((err) => {
-          this.backendLoading = false
-          console.error(err)
+          method: "POST"
         })
+          .then(res => {
+            this.backendLoading = false;
+            if (res.ok) {
+              res.json().then(uuid => {
+                const index = this.hosts.findIndex(h => h.uuid === uuid.uuid);
+                if (index !== -1) {
+                  this.hosts.splice(index, 1, Object.assign({}, host));
+                }
+              });
+            } else {
+              console.error("res:", res);
+            }
+          })
+          .catch(err => {
+            this.backendLoading = false;
+            console.error(err);
+          });
       } else {
         // new host, add it
-        fetch('/api/host', {
+        fetch("/api/host", {
           headers: UTILS.fetchHeaders(),
           body: JSON.stringify(host),
-          method: 'PUT'
-        }).then((res) => {
-          this.backendLoading = false
-          if (res.ok) {
-            res.json().then(host => this.hosts.push(host))
-          } else {
-            console.error('res:', res)
-          }
-        }).catch((err) => {
-          this.backendLoading = false
-          console.error(err)
+          method: "PUT"
         })
+          .then(res => {
+            this.backendLoading = false;
+            if (res.ok) {
+              res.json().then(host => this.hosts.push(host));
+            } else {
+              console.error("res:", res);
+            }
+          })
+          .catch(err => {
+            this.backendLoading = false;
+            console.error(err);
+          });
       }
-      this.closeEditor()
+      this.closeEditor();
     },
 
-    closeEditor () {
+    closeEditor() {
       setTimeout(() => {
-        this.editedHost = Object.assign({}, this.defaultHost)
+        this.editedHost = Object.assign({}, this.defaultHost);
         // this.editedHostIndex = -1
-      }, 300)
+      }, 300);
     }
   }
-}
+};
 </script>
