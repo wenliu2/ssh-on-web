@@ -1,19 +1,22 @@
 version: "3"
 services:
   mongodb:
-    image: victor2333/mongo:4.1.4-xenial
+    build: ../mongodb/
+    environment:
+      - MONGO_INITDB_DATABASE=toolsdb
     volumes:
       - /data/db/mongo:/data/db
     restart: always
   ssh-on-web:
-    image: victor2333/ssh-on-web:latest
-    # build: ../
+    # image: victor2333/ssh-on-web:latest
+    build: ../
+    environment:
+      - MONGODB_URL=mongodb://mongodb/toolsdb
+      - NODE_ENV=production
     volumes:
       - /data/ssh-on-web/config:/ssh-on-web/config
     depends_on:
       - mongodb
     ports:
       - "127.0.0.1:8080:8080"
-    environment:
-      - NODE_ENV=production
     restart: always
