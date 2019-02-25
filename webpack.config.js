@@ -53,9 +53,7 @@ function config_func(devMode) {
           use: [
             devMode ? 'vue-style-loader' : MiniCssExtractPlugin.loader,
             'css-loader',
-            {
-              loader: 'sass-loader',
-            },
+            'sass-loader'
           ],
         },
         {
@@ -67,7 +65,9 @@ function config_func(devMode) {
         },
         {
           test: /\.styl$/,
-          loader: [devMode ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader', 'stylus-loader']
+          use: [devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
+            'css-loader',
+            'stylus-loader']
         },
         {
           test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)(\?.*)?$/,
