@@ -2,8 +2,9 @@ const path = require('path');
 const { VueLoaderPlugin } = require('vue-loader');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-// const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
 // const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 // const MinifyPlugin = require("babel-minify-webpack-plugin");
 
@@ -27,7 +28,8 @@ function config_func(devMode) {
             chunks: 'all'
           }
         }
-      }
+      },
+      minimizer: [new TerserPlugin()],
     },
     module: {
       rules: [
@@ -40,9 +42,9 @@ function config_func(devMode) {
         },
         {
           test: /\.js$/,
-          exclude: /node_modules/,
-          use: [ 
-            'babel-loader', 
+          exclude: /\/node_modules\//,
+          use: [
+            'babel-loader',
             'eslint-loader'
           ]
         },
@@ -64,8 +66,28 @@ function config_func(devMode) {
           ]
         },
         {
-          test: /\.(png|woff|woff2|eot|ttf|svg)$/,
-          loader: 'url-loader?limit=100000'
+          test: /\.styl$/,
+          loader: [devMode ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader', 'stylus-loader']
+        },
+        {
+          test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)(\?.*)?$/,
+          oneOf: [
+            {
+              test: /\.(png|jpe?g|gif)$/,
+              resourceQuery: /vuetify-preload/,
+              use: [
+                'vuetify-loader/progressive-loader',
+                {
+                  loader: 'url-loader',
+                  options: { limit: 8000 }
+                }
+              ]
+            },
+            {
+              loader: 'url-loader',
+              options: { limit: 8000 }
+            }
+          ]
         }
       ]
     },
@@ -83,6 +105,7 @@ function config_func(devMode) {
       }
     },
     plugins: [
+      new VuetifyLoaderPlugin(),
       new VueLoaderPlugin(),
       new CleanWebpackPlugin([outputDirectory]),
       new HtmlWebpackPlugin({
@@ -94,7 +117,7 @@ function config_func(devMode) {
         // both options are optional
         filename: devMode ? '[name].css' : '[name].[hash].css',
         chunkFilename: devMode ? '[id].css' : '[id].[hash].css',
-      })
+      }),
     ],
     devtool: devMode ? 'inline-source-map' : 'source-map'
     /*
