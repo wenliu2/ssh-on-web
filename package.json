@@ -16,8 +16,8 @@
     "debug-server": "concurrently \"yarn compile-server\" \"node --inspect-brk=9229 compiled/server/index.js\"",
     "debug": "concurrently \"yarn debug-server\" \"yarn client\""
   },
-  "author": "Wen Liu",
-  "license": "ISC",
+  "author": "Wen Liu, YunHan Tang",
+  "license": "MIT",
   "devDependencies": {
     "@babel/cli": "^7.1.2",
     "@babel/core": "^7.1.0",

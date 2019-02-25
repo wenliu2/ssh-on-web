@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: extensions/v1beta1 #This is for jenkins build, change to app/v1 is recommanded.
 kind: Deployment
 metadata:
   name: ssh-on-web-mongodb
@@ -30,7 +30,7 @@ spec:
       volumes:
         - name: ssh-on-web-mongodb
           persistentVolumeClaim:
-            claimName: pvc01
+            claimName: pvc01 #Use an exsisted pvc
 ---
 apiVersion: v1
 kind: Service

@@ -1,32 +1,9 @@
-1. create file "production.json" under /data/ssh-on-web/config/ with below contents: (replace db, user and password with the your value)   
-```
-{
-  "port":"8080",
-  "db":{
-    "url":"mongodb://mongodb/toolsdb",
-    "user":"toolsuser",
-    "password":"password12345"
-  }
-}
-```
+1. If you already have a mongodb, change the env variable.
+  MONGODB_PASSWD,
+  MONGODB_USER,
+  MONGODB_URL, (include db name, make sure the user have correct permission to access mongodb)
+  otherwise,create a /data dir to mount and persistent mongo volume
 
-2. Run ```docker-compose up``` to create and start docker instances.   
+2. Run ```docker-compose up --build``` to create and start docker instances.   
 
-3. "ssh-on-web" will report DB connection error for the first time, you should create db/user in mongodb by following instructions.(replace db/user/password if you changed them in step 1) 
-```
-docker-compose exec mongodb /bin/bash
-
-mongo
-
-use toolsdb
-db.createUser(
-   {
-     user: "toolsuser",
-     pwd: "password12345",
-     roles: [ "dbOwner" ]
-   }
-)
-
-```
-ssh-on-web will report connect successfully after you finish the above setup.   
-Access http://localhost:18081
+3. Run ```docker-compose up -d --build``` to make it run at background.

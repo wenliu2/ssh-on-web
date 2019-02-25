@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: extensions/v1beta1 #This is for jenkins build, change to app/v1 is recommanded.
 kind: Deployment
 metadata:
   name: ssh-on-web
@@ -46,7 +46,7 @@ metadata:
   namespace: default
 spec:
   rules:
-    - host: "k8s-1-3077630.lvs02.dev.ebayc3.com"
+    - host: "k8s-1-3077630.lvs02.dev.ebayc3.com" #change the host which you want
       http:
         paths:
           - path: /
