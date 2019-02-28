@@ -15,7 +15,7 @@ stages:
     steps:
       - publishImageConfig:
           dockerfilePath: ./Dockerfile
-          buildContext: .
+          buildContext: ./
           tag: ssh-on-web-rancher:${CICD_EXECUTION_SEQUENCE}
 
   - name: Deplo SSH-ON-WEB
