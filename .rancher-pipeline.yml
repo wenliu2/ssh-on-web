@@ -4,7 +4,7 @@ stages:
       - publishImageConfig:
           dockerfilePath: ./mongodb/Dockerfile
           buildContext: .
-          tag: victor2333/ssh-on-web-mongo-rancher:${CICD_EXECUTION_SEQUENCE}
+          tag: ssh-on-web-mongo-rancher:${CICD_EXECUTION_SEQUENCE}
   - name: Deploy
     steps:
       - applyYamlConfig:

@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: ssh-on-web-mongodb
-          image: victor2333/ssh-on-web-mongo-rancher:${CICD_EXECUTION_SEQUENCE}
+          image: ssh-on-web-mongo-rancher:${CICD_EXECUTION_SEQUENCE}
           args: ["--auth"]
           env:
             - name: MONGO_INITDB_DATABASE
