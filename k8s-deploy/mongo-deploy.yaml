@@ -19,7 +19,7 @@ spec:
         - name: pipeline-docker-registry
       containers:
         - name: ssh-on-web-mongodb
-          image: ${CICD_IMAGE}:${CICD_EXECUTION_SEQUENCE}
+          image: ${CICD_REGISTRY}/ssh-on-web-mongodb-rancher:${CICD_EXECUTION_SEQUENCE}
           args: ["--auth"]
           env:
             - name: MONGO_INITDB_DATABASE
