@@ -15,9 +15,11 @@ spec:
       labels:
         app: ssh-on-web-mongodb
     spec:
+      imagePullSecrets:
+        - name: pipeline-docker-registry
       containers:
         - name: ssh-on-web-mongodb
-          image: ssh-on-web-mongo-rancher:${CICD_EXECUTION_SEQUENCE}
+          image: ${CICD_IMAGE}:${CICD_EXECUTION_SEQUENCE}
           args: ["--auth"]
           env:
             - name: MONGO_INITDB_DATABASE
