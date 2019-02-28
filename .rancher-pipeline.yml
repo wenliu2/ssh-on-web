@@ -1,22 +1,24 @@
 stages:
-  - name: Publish And Build Mongodb
-    steps:
-      - publishImageConfig:
-          dockerfilePath: ./mongodb/Dockerfile
-          buildContext: ./mongodb
-          tag: ssh-on-web-mongodb-rancher:${CICD_EXECUTION_SEQUENCE}
-
-  - name: Deploy MongoDB
-    steps:
-      - applyYamlConfig:
-          path: ./k8s-deploy/mongo-deploy.yaml
-  # - name: Publish And Build SSH-ON-WEB
+  # - name: Publish And Build Mongodb
   #   steps:
   #     - publishImageConfig:
-  #         dockerfilePath: ./Dockerfile
-  #         buildContext: .
-  #         tag: ssh-on-web-rancher:${CICD_EXECUTION_SEQUENCE}
-  # - name: Deplo SSH-ON-WEB
+  #         dockerfilePath: ./mongodb/Dockerfile
+  #         buildContext: ./mongodb
+  #         tag: ssh-on-web-mongodb-rancher:${CICD_EXECUTION_SEQUENCE}
+
+  # - name: Deploy MongoDB
   #   steps:
   #     - applyYamlConfig:
-  #         path: ./k8s-deploy/ssh-on-web-deploy.yaml
+  #         path: ./k8s-deploy/mongo-deploy.yaml
+
+  - name: Publish And Build SSH-ON-WEB
+    steps:
+      - publishImageConfig:
+          dockerfilePath: ./Dockerfile
+          buildContext: .
+          tag: ssh-on-web-rancher:${CICD_EXECUTION_SEQUENCE}
+
+  - name: Deplo SSH-ON-WEB
+    steps:
+      - applyYamlConfig:
+          path: ./k8s-deploy/ssh-on-web-deploy.yaml
