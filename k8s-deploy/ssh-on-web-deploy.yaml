@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: ssh-on-web
-          image: ssh-on-web-rancher:${CICD_EXECUTION_SEQUENCE}
+          image: ${CICD_IMAGE}:${CICD_EXECUTION_SEQUENCE}
           env:
             - name: NODE_ENV
               value: production
