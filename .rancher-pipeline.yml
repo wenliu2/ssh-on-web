@@ -1,0 +1,11 @@
+stages:
+  - name: Publish MongoDB
+    steps:
+      - publishImageConfig:
+          dockerfilePath: ./mongodb/Dockerfile
+          buildContext: .
+          tag: victor2333/ssh-on-web-mongo-rancher:${CICD_EXECUTION_SEQUENCE}
+  - name: Deploy
+    steps:
+      - applyYamlConfig:
+          path: ./k8s-deploy/mongo-deploy.yaml

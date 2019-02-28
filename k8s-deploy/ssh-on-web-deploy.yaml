@@ -2,6 +2,7 @@ apiVersion: extensions/v1beta1 #This is for jenkins build, change to app/v1 is r
 kind: Deployment
 metadata:
   name: ssh-on-web
+  namespace: ssh-on-web
   labels:
     app: ssh-on-web
 spec:
@@ -16,8 +17,7 @@ spec:
     spec:
       containers:
         - name: ssh-on-web
-          image: victor2333/ssh-on-web:1.0.$BUILD_NUMBER
-          imagePullPolicy: "Always"
+          image: victor2333/ssh-on-web-rancher:${CICD_EXECUTION_SEQUENCE}
           env:
             - name: NODE_ENV
               value: production
@@ -38,18 +38,3 @@ spec:
     - port: 8080
   selector:
     app: ssh-on-web
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: ssh-on-web
-  namespace: default
-spec:
-  rules:
-    - host: "k8s-1-3077630.lvs02.dev.ebayc3.com" #change the host which you want
-      http:
-        paths:
-          - path: /
-            backend:
-              serviceName: ssh-on-web
-              servicePort: 8080
