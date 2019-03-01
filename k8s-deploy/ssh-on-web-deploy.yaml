@@ -46,7 +46,7 @@ metadata:
   namespace: default
 spec:
   rules:
-    - host: "k8s-1-3077630.lvs02.dev.ebayc3.com" #change the host which you want
+    - host: "ssh-on-web.yuntang.corp.ebay.com" #change the host which you want
       http:
         paths:
           - path: /
