@@ -1,5 +1,5 @@
 stages:
-  - name: Publish And Build ssh_on_web
+  - name: Build MongoDB
     steps:
       - publishImageConfig:
           dockerfilePath: ./mongodb/Dockerfile
@@ -7,6 +7,9 @@ stages:
           tag: ssh-on-web-mongodb-rancher:${CICD_EXECUTION_SEQUENCE}
           env:
             PLUGIN_STORAGE_PATH: /var/lib/docker/1
+
+  - name: Build SSHONWEB
+    steps:
       - publishImageConfig:
           dockerfilePath: ./Dockerfile
           buildContext: .
