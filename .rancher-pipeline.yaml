@@ -5,8 +5,8 @@ stages:
           dockerfilePath: ./mongodb/Dockerfile
           buildContext: ./mongodb
           tag: ssh-on-web-mongodb-rancher:${CICD_EXECUTION_SEQUENCE}
-          env:
-            PLUGIN_STORAGE_PATH: /var/lib/docker/1
+          # env:
+          # PLUGIN_STORAGE_PATH: /var/lib/docker/1
 
   - name: Build SSHONWEB
     steps:
@@ -14,8 +14,8 @@ stages:
           dockerfilePath: ./Dockerfile
           buildContext: .
           tag: ssh-on-web-rancher:${CICD_EXECUTION_SEQUENCE}
-          env:
-            PLUGIN_STORAGE_PATH: /var/lib/docker/2
+          # env:
+          # PLUGIN_STORAGE_PATH: /var/lib/docker/2
 
   - name: Deplo ssh_on_web
     steps:
