@@ -12,6 +12,10 @@ spec:
       app: ssh-on-web
   template:
     metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "8080"
       labels:
         app: ssh-on-web
     spec:
