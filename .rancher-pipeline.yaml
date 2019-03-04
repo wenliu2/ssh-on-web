@@ -16,7 +16,7 @@ stages:
           # env:
           # PLUGIN_STORAGE_PATH: /var/lib/docker/2
 
-  - name: Deplo ssh_on_web
+  - name: Deploy ssh_on_web
     steps:
       # - applyYamlConfig:
       # path: ./k8s-deploy/mongo-deploy.yaml
