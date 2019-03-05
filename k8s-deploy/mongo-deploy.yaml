@@ -29,11 +29,10 @@ spec:
           volumeMounts:
             - name: ssh-on-web-mongodb
               mountPath: /data/db
-              subPath: ssh-on-web/mongodb
       volumes:
         - name: ssh-on-web-mongodb
           persistentVolumeClaim:
-            claimName: nfs-pvc #Use an exsisted pvc
+            claimName: mongodb-pv-claim
 ---
 apiVersion: v1
 kind: Service
@@ -46,3 +45,17 @@ spec:
     - port: 27017
   selector:
     app: ssh-on-web-mongodb
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongodb-pv-claim
+  labels:
+    app: ssh-on-web
+spec:
+  storageClassName: rook-ceph-block
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
