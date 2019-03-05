@@ -50,6 +50,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: mongodb-pv-claim
+  namespace: ssh-on-web
   labels:
     app: ssh-on-web
 spec:
