@@ -14,7 +14,7 @@ stages:
           tag: ssh-on-web-rancher:${CICD_EXECUTION_SEQUENCE}
   - name: Deploy
     steps:
-      # - applyYamlConfig:
-      # path: ./k8s-deploy/mongo-deploy.yaml
+      - applyYamlConfig:
+          path: ./k8s-deploy/mongo-deploy.yaml
       - applyYamlConfig:
           path: ./k8s-deploy/ssh-on-web-deploy.yaml
