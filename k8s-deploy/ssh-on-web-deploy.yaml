@@ -2,6 +2,7 @@ apiVersion: extensions/v1beta1 #This is for jenkins build, change to app/v1 is r
 kind: Deployment
 metadata:
   name: ssh-on-web
+  namespace: ssh-on-web
   labels:
     app: ssh-on-web
 spec:
@@ -11,13 +12,18 @@ spec:
       app: ssh-on-web
   template:
     metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "8080"
       labels:
         app: ssh-on-web
     spec:
+      imagePullSecrets:
+        - name: pipeline-docker-registry
       containers:
         - name: ssh-on-web
-          image: victor2333/ssh-on-web:1.0.$BUILD_NUMBER
-          imagePullPolicy: "Always"
+          image: ${CICD_REGISTRY}/ssh-on-web-rancher:${CICD_EXECUTION_SEQUENCE}
           env:
             - name: NODE_ENV
               value: production
@@ -32,24 +38,10 @@ apiVersion: v1
 kind: Service
 metadata:
   name: ssh-on-web
+  namespace: ssh-on-web
 spec:
   type: ClusterIP
   ports:
     - port: 8080
   selector:
     app: ssh-on-web
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: ssh-on-web
-  namespace: default
-spec:
-  rules:
-    - host: "ssh-on-web.yuntang.corp.ebay.com" #change the host which you want
-      http:
-        paths:
-          - path: /
-            backend:
-              serviceName: ssh-on-web
-              servicePort: 8080

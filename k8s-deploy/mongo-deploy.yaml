@@ -2,6 +2,7 @@ apiVersion: extensions/v1beta1 #This is for jenkins build, change to app/v1 is r
 kind: Deployment
 metadata:
   name: ssh-on-web-mongodb
+  namespace: ssh-on-web
   labels:
     app: ssh-on-web-mongodb
 spec:
@@ -14,9 +15,11 @@ spec:
       labels:
         app: ssh-on-web-mongodb
     spec:
+      imagePullSecrets:
+        - name: pipeline-docker-registry
       containers:
         - name: ssh-on-web-mongodb
-          image: victor2333/ssh-on-web-mongo:1.0.$BUILD_NUMBER
+          image: ${CICD_REGISTRY}/ssh-on-web-mongodb-rancher:${CICD_EXECUTION_SEQUENCE}
           args: ["--auth"]
           env:
             - name: MONGO_INITDB_DATABASE
@@ -26,19 +29,34 @@ spec:
           volumeMounts:
             - name: ssh-on-web-mongodb
               mountPath: /data/db
-              subPath: ssh-on-web/mongodb
       volumes:
         - name: ssh-on-web-mongodb
           persistentVolumeClaim:
-            claimName: pvc01 #Use an exsisted pvc
+            claimName: mongodb-pv-claim
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: ssh-on-web-mongodb
+  namespace: ssh-on-web
 spec:
   type: ClusterIP
   ports:
     - port: 27017
   selector:
     app: ssh-on-web-mongodb
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongodb-pv-claim
+  namespace: ssh-on-web
+  labels:
+    app: ssh-on-web
+spec:
+  storageClassName: rook-ceph-block
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
