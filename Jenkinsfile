@@ -7,19 +7,20 @@ pipeline {
     stages {
         stage('Docker Login') {
             steps {
-                sh 'docker login -u DOCKERCRE_USR -p DOCKERCRE_PSW'
+                sh 'echo $DOCKERCRE_USR'
+                sh 'docker login -u $DOCKERCRE_USR -p $DOCKERCRE_PSW'
             }
         }
 
         stage('Build ssh-on-web') {
             steps {
-                sh './JenkinsStage/Stage-1.sh victor2333/ssh-on-web 1.0.${BUILD_ID}'
+                sh './JenkinsStage/Stage-1.sh victor2333/ssh-on-web 1.0.$BUILD_ID'
             }
         }
 
         stage('Build mongodb') {
             steps {
-                sh './JenkinsStage/Stage-2.sh victor2333/ssh-on-web-mongodb 1.0.${BUILD_ID}'
+                sh './JenkinsStage/Stage-2.sh victor2333/ssh-on-web-mongodb 1.0.$BUILD_ID'
             }
         }
 
