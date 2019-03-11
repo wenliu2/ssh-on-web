@@ -29,7 +29,8 @@ pipeline {
 
         stage('DEPLOY') {
             steps {
-                sh 'docker run --rm lachlanevenson/k8s-kubectl:latest --server=$KUBESERVER --certificate-authority=$KUBECA --token=$KUBETOKEN version'
+                sh 'echo $KUBECA > cert'
+                sh 'docker run --rm lachlanevenson/k8s-kubectl:latest --server=$KUBESERVER --certificate-authority=cert --token=$KUBETOKEN version'
             }
         }
     }
