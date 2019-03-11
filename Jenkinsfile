@@ -28,5 +28,8 @@ node {
         steps {
             sh 'kubectl version'
         }
+        steps {
+            sh 'ls -la'
+        }
     }
 }
