@@ -1,5 +1,7 @@
 node {
     checkout scm
+    agent none
+    stages {
 
     // stage('BUILD SSH-ON-WEB DOCKER IMAGE') {
     //     docker.withRegistry("", "docekrHubCredential") {
@@ -21,15 +23,16 @@ node {
     //     } 
     // }
 
-    stage('DEPLOY') {
-        agent {
-            docker { image 'lachlanevenson/k8s-kubectl:latest'}
-        }
-        steps {
-            sh 'kubectl version'
-        }
-        steps {
-            sh 'ls -la'
+        stage('DEPLOY') {
+            agent {
+                docker { image 'lachlanevenson/k8s-kubectl:latest' }
+            }
+            steps {
+                sh 'kubectl version'
+            }
+            steps {
+                sh 'ls -la'
+            }
         }
     }
 }
