@@ -33,6 +33,7 @@ pipeline {
                 sh 'chmod +x kubectl'
                 sh 'echo $KUBECONFIG'
                 sh 'echo $KUBECONFIG > kubeconfig.cnf'
+                sh 'kubectl --kubeconfig kubeconfig.cnf version'
             }
         }
     }
