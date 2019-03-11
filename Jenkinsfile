@@ -28,7 +28,9 @@ pipeline {
 
         stage('DEPLOY') {
             steps {
-                sh 'docker run --rm lachlanevenson/k8s-kubectl:latest --server=$KUBESERVER --certificate-authority=cacerts.pem --token=$KUBETOKEN version'
+                sh 'curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl'
+                sh 'chmod +x kubectl'
+                sh './kubectl --server=$KUBESERVER --certificate-authority=cacerts.pem --token=$KUBETOKEN version'
             }
         }
     }
