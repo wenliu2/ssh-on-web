@@ -11,14 +11,9 @@ pipeline {
             }
         }
 
-        stage('Build ssh-on-web') {
+        stage('Build') {
             steps {
                 sh './JenkinsStage/Stage-1.sh $DOCKERCRE_USR/ssh-on-web 1.0.$BUILD_ID'
-            }
-        }
-
-        stage('Build mongodb') {
-            steps {
                 sh './JenkinsStage/Stage-2.sh $DOCKERCRE_USR/ssh-on-web-mongodb 1.0.$BUILD_ID'
             }
         }

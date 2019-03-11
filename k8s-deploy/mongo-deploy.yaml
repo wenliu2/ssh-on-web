@@ -1,4 +1,4 @@
-apiVersion: app/v1 #This is for jenkins build, change to app/v1 is recommanded.
+apiVersion: apps/v1 #This is for jenkins build, change to app/v1 is recommanded.
 kind: Deployment
 metadata:
   name: ssh-on-web-mongodb
