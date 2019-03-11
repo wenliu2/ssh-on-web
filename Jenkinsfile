@@ -31,8 +31,7 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sh './envsubst < ./k8s-deploy/mongo-deploy.yaml | ./kubectl --kubeconfig $KUBECONFIG apply -f -'
-                sh './envsubst < ./k8s-deploy/ssh-on-web-deploy.yaml | ./kubectl --kubeconfig $KUBECONFIG apply -f -'
+                sh './JenkinsStage/Stage-4.sh'
             }
         }
     }
