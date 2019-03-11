@@ -1,7 +1,9 @@
 pipeline {
     agent any
     environment {
-        KubernetesCRE = credentials('rancher-kube-dev')
+        KUBETOKEN = credentials('rancher-kube-dev')
+        KUBECA = credentials('rancher-dev-ca')
+        KUBESERVER = credentials('rancher-dev-server')
     }
     stages {
 
@@ -27,8 +29,7 @@ pipeline {
 
         stage('DEPLOY') {
             steps {
-                sh 'echo $KubernetesCRE'
-                sh 'ls -la'
+                sh 'docker run --rm lachlanevenson/k8s-kubectl:latest --server=$KUBESERVER --certificate-authority=$KUBECA --token=$KUBETOKEN version'
             }
         }
     }
