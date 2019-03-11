@@ -19,7 +19,7 @@ spec:
         - name: pipeline-docker-registry
       containers:
         - name: ssh-on-web-mongodb
-          image: victor2333/ssh-on-web-mongodb-rancher:1.0.$BUILD_ID
+          image: victor2333/ssh-on-web-mongodb:1.0.$BUILD_ID
           args: ["--auth"]
           env:
             - name: MONGO_INITDB_DATABASE

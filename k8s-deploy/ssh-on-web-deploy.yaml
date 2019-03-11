@@ -23,7 +23,7 @@ spec:
         - name: pipeline-docker-registry
       containers:
         - name: ssh-on-web
-          image: victor2333/ssh-on-web-rancher:1.0.$BUILD_ID
+          image: victor2333/ssh-on-web:1.0.$BUILD_ID
           env:
             - name: NODE_ENV
               value: production
