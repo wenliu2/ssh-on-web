@@ -1,4 +1,5 @@
 pipeline {
+    agent none
     environment {
         KubernetesCRE = credentials('rancher-dev-kube-config')
     }
