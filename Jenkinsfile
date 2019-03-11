@@ -1,6 +1,4 @@
-node {
-    checkout scm
-
+pipeline {
     environment {
         KubernetesCRE = credentials('rancher-dev-kube-config')
     }
