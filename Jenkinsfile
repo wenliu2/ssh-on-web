@@ -1,5 +1,9 @@
-pipeline {
-    agent none
+node {
+    checkout scm
+
+    environment {
+        KubernetesCRE = credentials('rancher-dev-kube-config')
+    }
     stages {
 
     // stage('BUILD SSH-ON-WEB DOCKER IMAGE') {
@@ -23,11 +27,8 @@ pipeline {
     // }
 
         stage('DEPLOY') {
-            agent {
-                docker { image 'lachlanevenson/k8s-kubectl:latest' }
-            }
             steps {
-                sh 'kubectl version'
+                sh 'echo $KubernetesCRE'
                 sh 'ls -la'
             }
         }
