@@ -34,6 +34,9 @@ pipeline {
         }
         stage('Deploy') {
             steps {
+                sh 'curl -L https://github.com/a8m/envsubst/releases/download/v1.1.0/envsubst-`uname -s`-`uname -m` -o envsubst'
+                sh 'chmod +x envsubst'
+                sh 'envsubst'
                 sh './kubectl --kubeconfig $KUBECONFIG get pods --all-namespaces'
             }
         }
