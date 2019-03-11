@@ -2,6 +2,7 @@ pipeline {
     agent any
     environment {
         KUBETOKEN = credentials('rancher-kube-dev')
+        KUBECONFIG = credentials('kubectl-config-file')
         KUBESERVER = credentials('rancher-dev-server')
     }
     stages {
@@ -30,7 +31,8 @@ pipeline {
             steps {
                 sh 'curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl'
                 sh 'chmod +x kubectl'
-                sh './kubectl --server=$KUBESERVER --certificate-authority=cacerts.pem --token=$KUBETOKEN version'
+                sh 'echo $KUBECONFIG'
+                sh 'echo $KUBECONFIG > kubeconfig.cnf'
             }
         }
     }
