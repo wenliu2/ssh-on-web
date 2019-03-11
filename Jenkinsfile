@@ -1,7 +1,7 @@
 pipeline {
     agent none
     environment {
-        KubernetesCRE = credentials('rancher-dev-kube-config')
+        KubernetesCRE = credentials('rancher-kube-dev')
     }
     stages {
 
