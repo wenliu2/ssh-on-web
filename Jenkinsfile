@@ -1,5 +1,5 @@
 pipeline {
-    agent none
+    agent any
     environment {
         DOCKERCRE = credentials('docekrHubCredential')
         KUBECONFIG = credentials('kubectl-config-file')
