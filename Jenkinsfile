@@ -1,5 +1,4 @@
-pipeline {
-    agent node
+node {
     environment {
         KUBECONFIG = credentials('kubectl-config-file')
     }
