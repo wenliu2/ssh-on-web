@@ -24,14 +24,14 @@ node {
     stage('DEPLOY SSH-ON-WEB-MONGODB') {
         kubernetesDeploy(kubeconfigId: 'rancher-dev-kube-config',               // REQUIRED
             configs: 'k8s-deploy/mongo-deploy.yaml', // REQUIRED
-            enableConfigSubstitution: false,
+            enableConfigSubstitution: true, //to replace ${BUILD_ID}
         )
     }
 
     stage('DEPLOY SSH-ON-WEB') {
         kubernetesDeploy(kubeconfigId: 'rancher-dev-kube-config',               // REQUIRED
             configs: 'k8s-deploy/ssh-on-web-deploy.yaml', // REQUIRED
-            enableConfigSubstitution: false,
+            enableConfigSubstitution: true, //to replace ${BUILD_ID}
         )
     }
 }
