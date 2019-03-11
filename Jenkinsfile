@@ -1,9 +1,7 @@
 pipeline {
     agent any
     environment {
-        KUBETOKEN = credentials('rancher-kube-dev')
         KUBECONFIG = credentials('kubectl-config-file')
-        KUBESERVER = credentials('rancher-dev-server')
     }
     stages {
 
