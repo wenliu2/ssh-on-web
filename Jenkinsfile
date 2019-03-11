@@ -8,7 +8,7 @@ pipeline {
     }
     stage('Build') {
       parallel {
-        stage('Build') {
+        stage('Build ssh-on-web') {
           steps {
             sh './JenkinsStage/Stage-1.sh $DOCKERCRE_USR/ssh-on-web 1.0.$BUILD_ID'
           }
