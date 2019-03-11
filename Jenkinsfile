@@ -25,11 +25,16 @@ pipeline {
     //     } 
     // }
 
-        stage('DEPLOY') {
+        stage('INSTALL KUBECTL') {
             steps {
                 sh 'curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl'
                 sh 'chmod +x kubectl'
                 sh './kubectl --kubeconfig $KUBECONFIG version'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh './kubectl --kubeconfig $KUBECONFIG get pods --all-namespaces'
             }
         }
     }
