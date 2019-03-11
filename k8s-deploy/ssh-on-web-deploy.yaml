@@ -23,7 +23,7 @@ spec:
         - name: pipeline-docker-registry
       containers:
         - name: ssh-on-web
-          image: ${CICD_REGISTRY}/ssh-on-web-rancher:${CICD_EXECUTION_SEQUENCE}
+          image: victor2333/ssh-on-web-rancher:${env.BUILD_ID}
           env:
             - name: NODE_ENV
               value: production
