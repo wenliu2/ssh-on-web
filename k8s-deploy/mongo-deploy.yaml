@@ -20,6 +20,7 @@ spec:
       containers:
         - name: ssh-on-web-mongodb
           image: $DOCKERCRE_USR/ssh-on-web-mongodb:1.0.$BUILD_ID
+          imagePullPolicy: Always
           args: ["--auth"]
           env:
             - name: MONGO_INITDB_DATABASE
