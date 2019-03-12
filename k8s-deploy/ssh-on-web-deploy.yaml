@@ -19,11 +19,9 @@ spec:
       labels:
         app: ssh-on-web
     spec:
-      imagePullSecrets:
-        - name: pipeline-docker-registry
       containers:
         - name: ssh-on-web
-          image: victor2333/ssh-on-web:1.0.$BUILD_ID
+          image: $DOCKERCRE_USR/ssh-on-web:1.0.$BUILD_ID
           env:
             - name: NODE_ENV
               value: production

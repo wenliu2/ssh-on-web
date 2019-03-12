@@ -7,6 +7,8 @@ metadata:
     app: ssh-on-web-mongodb
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: ssh-on-web-mongodb
@@ -15,11 +17,9 @@ spec:
       labels:
         app: ssh-on-web-mongodb
     spec:
-      imagePullSecrets:
-        - name: pipeline-docker-registry
       containers:
         - name: ssh-on-web-mongodb
-          image: victor2333/ssh-on-web-mongodb:1.0.$BUILD_ID
+          image: $DOCKERCRE_USR/ssh-on-web-mongodb:1.0.$BUILD_ID
           args: ["--auth"]
           env:
             - name: MONGO_INITDB_DATABASE
