@@ -30,6 +30,11 @@ pipeline {
         sh './JenkinsStage/Stage-4.sh'
       }
     }
+    stage('Clean') {
+      steps {
+        sh 'docker image prune -af'
+      }
+    }
   }
   environment {
     DOCKERCRE = credentials('docekrHubCredential')
