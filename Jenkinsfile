@@ -32,7 +32,7 @@ pipeline {
     }
     stage('Clean') {
       steps {
-        sh 'docker image prune -af'
+        sh 'docker image prune -f'
       }
     }
   }
