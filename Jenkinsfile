@@ -25,14 +25,14 @@ pipeline {
         sh './JenkinsStage/Stage-3.sh'
       }
     }
+    stage('Clean') {
+      steps {
+        sh 'docker image prune -af'
+      }
+    }
     stage('Deploy') {
       steps {
         sh './JenkinsStage/Stage-4.sh'
-      }
-    }
-    stage('Clean') {
-      steps {
-        sh 'docker image prune -f'
       }
     }
   }
