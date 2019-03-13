@@ -107,7 +107,7 @@ function config_func(devMode) {
     plugins: [
       new VuetifyLoaderPlugin(),
       new VueLoaderPlugin(),
-      new CleanWebpackPlugin([outputDirectory]),
+      new CleanWebpackPlugin(),
       new HtmlWebpackPlugin({
         template: './public/index.html',
         favicon: './public/favicon.ico'
