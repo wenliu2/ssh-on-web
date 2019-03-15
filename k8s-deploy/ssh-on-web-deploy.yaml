@@ -23,6 +23,8 @@ spec:
         - name: ssh-on-web
           image: $DOCKERCRE_USR/ssh-on-web:1.0.$BUILD_ID
           imagePullPolicy: Always
+          nodeSelector:
+            app: etcd
           env:
             - name: NODE_ENV
               value: production
