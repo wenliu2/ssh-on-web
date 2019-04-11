@@ -32,8 +32,8 @@ spec:
               value: qwe123asd
           ports:
             - containerPort: 8080
-      nodeSelector:
-        app: etcd
+      # nodeSelector:
+        # app: etcd
 ---
 apiVersion: v1
 kind: Service
