@@ -20,7 +20,7 @@
         <v-btn v-on:click="logout" icon slot="activator">
           <v-icon>exit_to_app</v-icon>
         </v-btn>
-        <span>sign out</span>
+        <span>Sign Out</span>
       </v-tooltip>
     </v-toolbar>
     <div style="text-align: left; position: relative; height: 100%;" ref="termDiv"></div>
