@@ -7,15 +7,15 @@
       <SSHTo @changeOption="changeOption"/>
       <Keys/>
       <v-spacer></v-spacer>
-      <span style="padding-right: 10px">{{connection}}</span>
-      <v-icon small color="green" v-if="connected">wifi_tethering</v-icon>
-      <v-icon small color="red" v-if="!connected">portable_wifi_off</v-icon>
+      <span style="padding-right: 10px">{{activeOption.connection}}</span>
+      <v-icon small color="green" v-if="activeOption.connected">wifi_tethering</v-icon>
+      <v-icon small color="red" v-if="!activeOption.connected">portable_wifi_off</v-icon>
       <v-btn
         small
         round
         v-on:click="connectToggle"
-        v-if="connection != ''"
-      >{{connected? "Disconnect" : "Reconnect" }}</v-btn>
+        v-if="activeOption.connection != ''"
+      >{{activeOption.connected? "Disconnect" : "Reconnect" }}</v-btn>
       <v-tooltip bottom>
         <v-btn v-on:click="logout" icon slot="activator">
           <v-icon>exit_to_app</v-icon>
@@ -31,8 +31,16 @@
         <v-spacer/>
         <h2>Hello {{auth.nt}}!</h2>
       </v-toolbar>
+      <draggable v-model="optionsArr"/>
     </v-navigation-drawer>
-    <Term :termOptions="options" v-model="connected" @changeConnection="changeConnection"/>
+    <Term
+      v-for="option in optionsArr"
+      :class="option.id === activeTermId ? 'term is-actived': 'term not-actived'"
+      :key="option.id"
+      :termOptions="option.options"
+      v-model="option.connected"
+      @changeConnection="changeConnection"
+    />
   </v-app>
 </template>
 <script>
@@ -41,22 +49,33 @@ import SSHTo from "./ssh-to/ssh-to.vue";
 import Keys from "./keys/keys.vue";
 import Term from "./term/term.vue";
 import ls from "local-storage";
+import draggable from "./draggable/draggable-wrapper.vue";
+import _ from "lodash";
 
 export default {
   components: {
     SSHTo,
     Keys,
-    Term
+    Term,
+    draggable
   },
   mounted() {},
 
   data() {
     return {
-      connection: "",
       auth: GlobalStore.auth,
       options: {},
-      navDrawer: false,
-      connected: false
+      optionsArr: [
+        {
+          options: {},
+          id: 0,
+          name: "Default",
+          isActive: true,
+          connected: false,
+          connection: ""
+        }
+      ],
+      navDrawer: false
     };
   },
 
@@ -67,16 +86,35 @@ export default {
       this.auth.clearToken();
     },
     connectToggle() {
-      this.connected = !this.connected;
+      this.activeOption.connected = !this.activeOption.connected;
     },
     changeOption(options) {
-      if (this.connected) this.connected = false;
-      this.options = options;
-      this.connected = true;
+      if (this.activeOption.connected) this.activeOption.connected = false;
+      this.activeOption.options = options;
+      this.activeOption.connected = true;
     },
     changeConnection(connection) {
-      this.connection = connection;
+      this.activeOption.connection = connection;
+    }
+  },
+  computed: {
+    activeTermId() {
+      return _.filter(this.optionsArr, o => {
+        return o.isActive;
+      })[0].id;
+    },
+    activeOption() {
+      return _.filter(this.optionsArr, o => {
+        return o.isActive;
+      })[0];
     }
   }
 };
 </script>
+<style lang="scss" scoped>
+.term{
+  &.not-actived {
+    display: none;
+  }
+}
+</style>

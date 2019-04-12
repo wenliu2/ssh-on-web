@@ -11,7 +11,6 @@ export default {
     event: "changeTermConnected"
   },
   props: ["termOptions", "termConnected"],
-  wsConnected: false,
   connection: "",
   data() {
     return {
@@ -105,7 +104,7 @@ export default {
   },
   methods: {
     sendMessage(op, data) {
-      if (this.wsConnected) {
+      if (this.termConnected) {
         this.ws.send(JSON.stringify({ op, data }));
       } else {
         console.warn("connection is not open.");
@@ -127,9 +126,6 @@ export default {
     },
 
     socketOpen() {
-      if (this.wsConnected) {
-        this.ws.close();
-      }
       const options = this.termOptions;
       this.connection = `${options.sshuser}@${options.sshhost}`;
       this.$emit("changeConnection", this.connection);
@@ -139,13 +135,11 @@ export default {
 
       this.ws = new W3cwebsocket(wsUrl, this.auth.token);
       this.ws.onopen = () => {
-        this.wsConnected = true;
         this.$emit("changeTermConnected", true);
         if (this.terminal) this.terminal.focus();
         this.reqSShConnect(options);
       };
       this.ws.onclose = () => {
-        this.wsConnected = false;
         this.$emit("changeTermConnected", false);
         this.io.println("Remotion connection closed.");
       };

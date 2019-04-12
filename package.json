@@ -73,6 +73,7 @@
     "js-sha512": "^0.8.0",
     "jsonwebtoken": "^8.3.0",
     "local-storage": "^1.4.2",
+    "lodash": "^4.17.11",
     "log4js": "^4.0.2",
     "material-design-icons-iconfont": "^4.0.5",
     "moment": "^2.24.0",
@@ -88,6 +89,7 @@
     "tmp-promise": "^1.0.5",
     "uuid": "^3.3.2",
     "vue": "^2.6.7",
+    "vuedraggable": "^2.20.0",
     "vuetify": "^1.5.2",
     "websocket": "^1.0.28"
   }
