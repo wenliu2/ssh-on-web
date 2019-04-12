@@ -89,9 +89,6 @@ import EditHost from "./edit-host.vue";
 import UTILS from "../../utils/utils";
 import GlobalStore from "../../global-store";
 export default {
-  props: {
-    connectTo: Function
-  },
   components: {
     EditHost
   },
@@ -159,7 +156,7 @@ export default {
           sshport: port
         });
         document.title = this.url;
-        this.connectTo(options);
+        this.$emit("changeOption", options);
       }
     },
 
@@ -213,7 +210,10 @@ export default {
       };
       options.PreferredAuthentications = item.authType;
       document.title = item.url;
-      this.connectTo(Object.assign({}, this.defaultSSHOptions, item, options));
+      this.$emit(
+        "changeOption",
+        Object.assign({}, this.defaultSSHOptions, item, options)
+      );
     },
 
     editHost(item) {
