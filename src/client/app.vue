@@ -12,6 +12,7 @@ import Talk from "./components/talk.vue";
 import GlobalStore from "./global-store";
 import Login from "./components/login.vue";
 import ls from "local-storage";
+import moment from "moment";
 
 export default {
   components: { Talk, Login },
@@ -24,6 +25,12 @@ export default {
   },
 
   created() {
+    if (moment(ls("token-expired")).isBefore(moment().subtract(30, "m"))) {
+      ls.clear();
+    }
+  },
+
+  mounted() {
     const token = ls("token");
     if (!token) return;
     this.auth.setToken(token);
@@ -36,10 +43,14 @@ export default {
       .then(res => {
         this.checkAuth = false;
         if (res.ok) {
-          this.auth.login();
+          // this.auth.login();
+          return res.json();
         } else if (res.status === 401) {
           this.auth.logout();
         }
+      })
+      .then(res => {
+        this.auth.login(res.user.nt);
       })
       .catch(err => {
         console.error("login error: ", err);

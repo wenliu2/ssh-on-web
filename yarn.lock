@@ -5304,6 +5304,11 @@ moment@2.22.2:
   resolved "https://registry.npm.es.ebay.com/m/moment/_attachments/moment-2.22.2.tgz#3c257f9839fc0e93ff53149632239eb90783ff66"
   integrity sha1-PCV/mDn8DpP/UxSWMiOeuQeD/2Y=
 
+moment@^2.24.0:
+  version "2.24.0"
+  resolved "https://registry.npm.es.ebay.com/m/moment/_attachments/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
+  integrity sha512-bV7f+6l2QigeBBZSM/6yTNq4P2fNpSWj/0e7jQcy87A8e7o2nAfP/34/2ky5Vw4B9S446EtIhodAzkFCcR4dQg==
+
 mongodb-core@3.2.2:
   version "3.2.2"
   resolved "https://registry.npm.es.ebay.com/m/mongodb-core/_attachments/mongodb-core-3.2.2.tgz#d1c084b34c102a98b4734087800115e639d907c5"

@@ -131,8 +131,8 @@ router.delete('/key/:hash', (req,res) => {
 })
 
 router.get('/login-status', (req, res) => {
-  logger.debug('login_status')
-  res.json({islogin: true})
+  logger.debug('login_status', req.user)
+  res.json({islogin: true, user: req.user})
 })
 
 module.exports = router;

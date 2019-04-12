@@ -1,7 +1,7 @@
 <template>
   <v-app style="height: 100%">
     <v-toolbar dense dark>
-      <v-btn icon>
+      <v-btn @click.stop="navDrawer = !navDrawer" icon>
         <v-icon>list</v-icon>
       </v-btn>
       <SSHTo :connectTo="socketOpen"/>
@@ -23,6 +23,15 @@
         <span>Sign Out</span>
       </v-tooltip>
     </v-toolbar>
+    <v-navigation-drawer v-model="navDrawer" absolute dark>
+      <v-toolbar dense dark>
+        <v-btn @click.stop="navDrawer = !navDrawer" icon>
+          <v-icon>list</v-icon>
+        </v-btn>
+        <v-spacer/>
+        <h2>Hello {{auth.nt}}!</h2>
+      </v-toolbar>
+    </v-navigation-drawer>
     <div style="text-align: left; position: relative; height: 100%;" ref="termDiv"></div>
   </v-app>
 </template>
@@ -124,14 +133,15 @@ export default {
       rows: 30,
       auth: GlobalStore.auth,
       terminal: null,
-      options: {}
+      options: {},
+      navDrawer: false
     };
   },
 
   methods: {
     logout() {
       this.auth.logout();
-      ls("token", "");
+      ls.clear();
       this.auth.clearToken();
     },
 
