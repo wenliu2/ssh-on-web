@@ -1,5 +1,5 @@
 <template>
-  <div style="text-align: left; position: relative; height: 100%;" ref="termDiv"></div>
+  <div style="text-align: left; height: 100%;" ref="termDiv"></div>
 </template>
 <script>
 import { w3cwebsocket as W3cwebsocket } from "websocket";

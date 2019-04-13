@@ -17,7 +17,6 @@
           <v-list-tile-action>
             <v-icon>aspect_ratio</v-icon>
           </v-list-tile-action>
-          <v-spacer/>
           <v-list-tile-content>
             <v-list-tile-title>{{ item.name }}</v-list-tile-title>
           </v-list-tile-content>
@@ -25,7 +24,9 @@
       </transition-group>
     </draggable>
     <v-list-tile>
-      <v-icon @click="add" style="cursor: pointer" dark>add</v-icon>
+      <v-list-tile-action>
+        <v-icon @click="add" style="cursor: pointer" dark>add</v-icon>
+      </v-list-tile-action>
     </v-list-tile>
   </v-list>
 </template>

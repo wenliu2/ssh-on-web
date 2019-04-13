@@ -1,11 +1,7 @@
 <template>
-  <v-app style="height: 100%">
-    <v-toolbar dense dark>
-      <v-btn @click.stop="navDrawer = !navDrawer" icon>
-        <v-icon>list</v-icon>
-      </v-btn>
-      <SSHTo @changeOption="changeOption"/>
-      <Keys/>
+  <v-app>
+    <v-toolbar app dense dark>
+      <h2>Hello {{auth.nt}}!</h2>
       <v-spacer></v-spacer>
       <span style="padding-right: 10px">{{activeOption.connection}}</span>
       <v-icon small color="green" v-if="activeOption.connected">wifi_tethering</v-icon>
@@ -23,24 +19,26 @@
         <span>Sign Out</span>
       </v-tooltip>
     </v-toolbar>
-    <v-navigation-drawer v-model="navDrawer" absolute dark>
+    <v-navigation-drawer app v-model="navDrawer" :mini-variant="navMini" hide-overlay dark>
       <v-toolbar dense dark>
-        <v-btn @click.stop="navDrawer = !navDrawer" icon>
+        <v-btn @click.stop="navMini = !navMini" icon>
           <v-icon>list</v-icon>
         </v-btn>
-        <v-spacer/>
-        <h2>Hello {{auth.nt}}!</h2>
+        <SSHTo v-show="!navMini" @changeOption="changeOption"/>
+        <Keys v-show="!navMini"/>
       </v-toolbar>
       <draggable v-model="optionsArr"/>
     </v-navigation-drawer>
-    <Term
-      v-for="option in sortedOptions"
-      v-show="option.isActive"
-      :key="option.id"
-      :termOptions="option.options"
-      v-model="option.connected"
-      @changeConnection="changeConnection"
-    />
+    <v-content>
+      <Term
+        v-for="option in sortedOptions"
+        v-show="option.isActive"
+        :key="option.id"
+        :termOptions="option.options"
+        v-model="option.connected"
+        @changeConnection="changeConnection"
+      />
+    </v-content>
   </v-app>
 </template>
 <script>
@@ -64,6 +62,7 @@ export default {
   data() {
     return {
       auth: GlobalStore.auth,
+      navMini: true,
       options: {},
       optionsArr: [
         {
@@ -75,7 +74,7 @@ export default {
           connection: ""
         }
       ],
-      navDrawer: false
+      navDrawer: true
     };
   },
 
