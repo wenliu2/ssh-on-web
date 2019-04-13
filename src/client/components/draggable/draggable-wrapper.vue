@@ -60,15 +60,16 @@ export default {
   },
   methods: {
     add() {
-      this.options.push({
+      const item = {
         options: {},
-        id: this.options.length,
+        id: _.maxBy(this.options, "id").id + 1,
         name: this.options.length,
-        isActive: false,
+        isActive: true,
         connected: false,
         connection: ""
-      });
-      this.changePropList(this.options);
+      };
+      this.options.push(item);
+      this.changeActive(item);
     },
     changeActive(item) {
       this.options = _.map(this.options, o => {

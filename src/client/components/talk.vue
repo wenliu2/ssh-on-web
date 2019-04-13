@@ -34,7 +34,7 @@
       <draggable v-model="optionsArr"/>
     </v-navigation-drawer>
     <Term
-      v-for="option in optionsArr"
+      v-for="option in sortedOptions"
       v-show="option.isActive"
       :key="option.id"
       :termOptions="option.options"
@@ -107,6 +107,9 @@ export default {
       return _.filter(this.optionsArr, o => {
         return o.isActive;
       })[0];
+    },
+    sortedOptions() {
+      return _.sortBy(this.optionsArr, ["id"]);
     }
   }
 };
