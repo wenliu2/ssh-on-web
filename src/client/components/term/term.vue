@@ -19,7 +19,8 @@ export default {
       io: null,
       cols: 80,
       rows: 30,
-      terminal: null
+      terminal: null,
+      wsConnected: false
     };
   },
   watch: {
@@ -104,9 +105,9 @@ export default {
   },
   methods: {
     sendMessage(op, data) {
-      if (this.termConnected) {
+      if (this.wsConnected && this.ws) {
         this.ws.send(JSON.stringify({ op, data }));
-      } else {
+      } else if (op !== "resize") {
         console.warn("connection is not open.");
       }
     },
@@ -135,12 +136,13 @@ export default {
 
       this.ws = new W3cwebsocket(wsUrl, this.auth.token);
       this.ws.onopen = () => {
-        this.$emit("changeTermConnected", true);
+        this.wsConnected = true;
         if (this.terminal) this.terminal.focus();
         this.reqSShConnect(options);
       };
       this.ws.onclose = () => {
-        this.$emit("changeTermConnected", false);
+        this.wsConnected = false;
+        this.$emit("changeTermConnected", this.wsConnected);
         this.io.println("Remotion connection closed.");
       };
       this.ws.onerror = () => {
