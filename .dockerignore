@@ -1,6 +1,4 @@
 **/node_modules
 .dockerignore
 **/*.swp
-package-lock.json
 **/.git
-yarn.lock
