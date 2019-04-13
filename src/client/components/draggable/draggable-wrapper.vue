@@ -15,7 +15,7 @@
           @click="changeActive(item)"
         >
           <v-list-tile-action>
-            <v-icon>aspect_ratio</v-icon>
+            <v-icon :color="item.connected ? 'green' : ''">aspect_ratio</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>

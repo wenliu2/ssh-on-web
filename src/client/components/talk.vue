@@ -115,6 +115,7 @@ export default {
         this.activeOption.options = options;
         this.activeOption.connected = true;
       }
+      this.navMini = true;
     },
     changeConnection(connection) {
       this.activeOption.connection = connection;
@@ -163,3 +164,8 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.v-btn.v-btn--icon.theme--dark {
+  margin-left: -3px;
+}
+</style>
