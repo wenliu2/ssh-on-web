@@ -88,9 +88,16 @@ export default {
       this.activeOption.connected = !this.activeOption.connected;
     },
     changeOption(options) {
-      if (this.activeOption.connected) this.activeOption.connected = false;
-      this.activeOption.options = options;
-      this.activeOption.connected = true;
+      if (this.activeOption.connected) {
+        this.activeOption.connected = false;
+        setTimeout(() => {
+          this.activeOption.options = options;
+          this.activeOption.connected = true;
+        });
+      } else {
+        this.activeOption.options = options;
+        this.activeOption.connected = true;
+      }
     },
     changeConnection(connection) {
       this.activeOption.connection = connection;
