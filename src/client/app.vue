@@ -62,7 +62,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 #app {
   height: calc(100vh - 16px);
 }

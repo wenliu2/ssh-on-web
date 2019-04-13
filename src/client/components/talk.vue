@@ -39,6 +39,17 @@
         @changeConnection="changeConnection"
       />
     </v-content>
+    <v-dialog v-model="dialog" width="500">
+      <v-card>
+        <v-card-title class="headline grey lighten-2" primary-title>{{errMsg.type}}</v-card-title>
+        <v-card-text>{{errMsg.text}}</v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" flat @click="handleDialogButton">{{errMsg.buttonText}}</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 <script>
@@ -74,7 +85,13 @@ export default {
           connection: ""
         }
       ],
-      navDrawer: true
+      navDrawer: true,
+      dialog: false,
+      errMsg: {
+        text: "",
+        type: "",
+        buttonText: ""
+      }
     };
   },
 
@@ -89,11 +106,11 @@ export default {
     },
     changeOption(options) {
       if (this.activeOption.connected) {
-        this.activeOption.connected = false;
-        setTimeout(() => {
-          this.activeOption.options = options;
-          this.activeOption.connected = true;
-        });
+        this.showDialog(
+          "Please disconnect current websocket",
+          "Alert",
+          "Disconnect"
+        );
       } else {
         this.activeOption.options = options;
         this.activeOption.connected = true;
@@ -101,6 +118,30 @@ export default {
     },
     changeConnection(connection) {
       this.activeOption.connection = connection;
+    },
+    showDialog(message, type, buttonText) {
+      this.dialog = true;
+      this.errMsg.text = message;
+      this.errMsg.type = type;
+      this.errMsg.buttonText = buttonText;
+    },
+    handleDialogButton() {
+      switch (this.errMsg.buttonText) {
+        case "Disconnect":
+          this.activeOption.connected = false;
+          break;
+        default:
+          break;
+      }
+      this.dialog = false;
+      this.clearDialog();
+    },
+    clearDialog() {
+      this.errMsg = {
+        text: "",
+        type: "",
+        buttonText: ""
+      };
     }
   },
   computed: {
@@ -110,9 +151,11 @@ export default {
       })[0].id;
     },
     activeOption() {
-      return _.filter(this.optionsArr, o => {
-        return o.isActive;
-      })[0];
+      return (
+        _.filter(this.optionsArr, o => {
+          return o.isActive;
+        })[0] || this.optionsArr[0]
+      );
     },
     sortedOptions() {
       return _.sortBy(this.optionsArr, ["id"]);

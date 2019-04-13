@@ -18,8 +18,14 @@
             <v-icon>aspect_ratio</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>{{ item.name }}</v-list-tile-title>
+            <v-list-tile-title>
+              {{item.name}}
+              <v-icon style="font-size: 14px" @click="showEdit(item)">edit</v-icon>
+            </v-list-tile-title>
           </v-list-tile-content>
+          <v-list-tile-action>
+            <v-icon v-if="options.length > 1 && item.connected === false" @click="closeItem(item)">close</v-icon>
+          </v-list-tile-action>
         </v-list-tile>
       </transition-group>
     </draggable>
@@ -28,6 +34,18 @@
         <v-icon @click="add" style="cursor: pointer" dark>add</v-icon>
       </v-list-tile-action>
     </v-list-tile>
+    <v-dialog v-model="editDialog" width="500">
+      <v-card>
+        <v-card-text>
+          <v-text-field v-model="edit.editText" label="Name:"/>
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" flat @click="handleEditDialogButton">{{edit.buttonText}}</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-list>
 </template>
 
@@ -46,7 +64,13 @@ export default {
   data() {
     return {
       options: this.list,
-      drag: false
+      drag: false,
+      editDialog: false,
+      edit: {
+        id: "",
+        editText: "",
+        buttonText: "OK"
+      }
     };
   },
   computed: {
@@ -57,6 +81,13 @@ export default {
         disabled: false,
         ghostClass: "ghost"
       };
+    },
+    editItem() {
+      return (
+        _.filter(this.options, o => {
+          return o.id === this.edit.id;
+        })[0] || null
+      );
     }
   },
   methods: {
@@ -64,7 +95,7 @@ export default {
       const item = {
         options: {},
         id: _.maxBy(this.options, "id").id + 1,
-        name: this.options.length,
+        name: `New Terminal ${_.maxBy(this.options, "id").id + 1}`,
         isActive: true,
         connected: false,
         connection: ""
@@ -83,6 +114,22 @@ export default {
         }
       });
       this.changePropList(this.options);
+    },
+    showEdit(item) {
+      this.edit.id = item.id;
+      this.edit.editText = item.name;
+      this.editDialog = true;
+    },
+    handleEditDialogButton() {
+      this.editItem.name = this.edit.editText;
+      this.editDialog = false;
+      this.changePropList(this.options);
+    },
+    closeItem(item) {
+      _.remove(this.options, o => {
+        return o.id === item.id;
+      });
+      this.changeActive(this.options[0]); // this is a temp solution.Because it will choose and then delete.In this moment, the active is still the old one in parent. So change to the first one
     },
     changePropList(list) {
       this.$emit("changeList", list);
