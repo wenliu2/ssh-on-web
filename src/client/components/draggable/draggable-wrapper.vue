@@ -2,14 +2,14 @@
   <v-list class="pt-0">
     <draggable
       class="list-group"
-      v-model="list"
+      v-model="options"
       v-bind="dragOptions"
       @start="drag = true"
       @end="drag = false"
     >
       <transition-group type="transition" :name="!drag ? 'flip-list' : null">
         <v-list-tile
-          v-for="item in list"
+          v-for="item in options"
           :key="item.id"
           :class="item.isActive ? 'list-group-item is-active' : 'list-group-item'"
           @click="changeActive(item)"
@@ -44,6 +44,7 @@ export default {
   props: ["list"],
   data() {
     return {
+      options: this.list,
       drag: false
     };
   },
@@ -58,32 +59,31 @@ export default {
     }
   },
   methods: {
-    listClass(item) {
-      return item.isActive ? "list-group-item is-active" : "list-group-item";
-    },
     add() {
-      this.list.push({
+      this.options.push({
         options: {},
-        id: this.list.length,
-        name: this.list.length,
+        id: this.options.length,
+        name: this.options.length,
         isActive: false,
         connected: false,
         connection: ""
       });
+      this.changePropList(this.options);
     },
     changeActive(item) {
-      this.$emit(
-        "changeList",
-        _.map(this.list, o => {
-          if (o.id !== item.id) {
-            o.isActive = false;
-            return o;
-          } else {
-            o.isActive = true;
-            return o;
-          }
-        })
-      );
+      this.options = _.map(this.options, o => {
+        if (o.id !== item.id) {
+          o.isActive = false;
+          return o;
+        } else {
+          o.isActive = true;
+          return o;
+        }
+      });
+      this.changePropList(this.options);
+    },
+    changePropList(list) {
+      this.$emit("changeList", list);
     }
   }
 };

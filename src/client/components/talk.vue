@@ -35,7 +35,7 @@
     </v-navigation-drawer>
     <Term
       v-for="option in optionsArr"
-      :class="option.id === activeTermId ? 'term is-actived': 'term not-actived'"
+      v-show="option.isActive"
       :key="option.id"
       :termOptions="option.options"
       v-model="option.connected"
@@ -111,10 +111,3 @@ export default {
   }
 };
 </script>
-<style lang="scss" scoped>
-.term{
-  &.not-actived {
-    display: none;
-  }
-}
-</style>
