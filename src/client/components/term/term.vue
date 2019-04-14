@@ -110,9 +110,10 @@ export default {
   methods: {
     sendMessage(op, data) {
       if (this.wsConnected && this.ws) {
+        if (!this.navMini && op !== "resize") {
+          this.$emit("update:navMini", true);
+        }
         this.ws.send(JSON.stringify({ op, data }));
-      } else if (op !== "resize" && !this.navMini) {
-        this.$emit("update:navMini", true);
       } else if (op !== "resize") {
         console.warn("connection is not open.");
       }
