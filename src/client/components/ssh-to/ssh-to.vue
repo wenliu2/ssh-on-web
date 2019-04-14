@@ -15,6 +15,8 @@
           <v-layout row wrap align-center>
             <v-flex xs12 sm6 md6>
               <v-text-field
+                v-if="dialog"
+                autofocus
                 prepend-icon="security"
                 label="SSH To"
                 :counter="100"
@@ -71,7 +73,7 @@
           </v-data-table>
         </v-card>
       </v-container>
-      <v-btn @click="editorDialog=!editorDialog" class="mb-2">New Host</v-btn>
+      <v-btn @click="newHostOnClick" class="mb-2">New Host</v-btn>
       <v-btn @click="refresh" class="mb-2">Refresh</v-btn>
       <EditHost
         v-model="editorDialog"
@@ -161,6 +163,7 @@ export default {
     },
 
     refresh() {
+      this.$refs.urlForm.resetValidation();
       const headers = UTILS.fetchHeaders();
       this.backendLoading = true;
       fetch("/api/hosts", {
@@ -302,6 +305,10 @@ export default {
         this.editedHost = Object.assign({}, this.defaultHost);
         // this.editedHostIndex = -1
       }, 300);
+    },
+    newHostOnClick() {
+      this.$refs.urlForm.resetValidation();
+      this.editorDialog = !this.editorDialog;
     }
   }
 };

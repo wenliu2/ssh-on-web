@@ -27,7 +27,9 @@
               </template>
               <v-card>
                 <v-card-text>
+                  <!-- make autofocus work -->
                   <v-text-field
+                    v-if="editDialog"
                     @keyup.enter="handleEditDialogButton"
                     v-model="edit.editText"
                     label="Name:"

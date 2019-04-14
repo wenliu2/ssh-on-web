@@ -11,7 +11,7 @@ export default {
     prop: "termConnected",
     event: "changeTermConnected"
   },
-  props: ["termOptions", "termConnected"],
+  props: ["termOptions", "termConnected", "navMini"],
   connection: "",
   data() {
     return {
@@ -111,6 +111,8 @@ export default {
     sendMessage(op, data) {
       if (this.wsConnected && this.ws) {
         this.ws.send(JSON.stringify({ op, data }));
+      } else if (op !== "resize" && !this.navMini) {
+        this.$emit("update:navMini", true);
       } else if (op !== "resize") {
         console.warn("connection is not open.");
       }

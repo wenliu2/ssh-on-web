@@ -13,6 +13,8 @@
             <v-layout row wrap>
               <v-flex xs12 sm6 md6>
                 <v-text-field
+                  v-if="value"
+                  autofocus
                   v-model="editHost.url"
                   label="URL"
                   :rules="[rules.required, rules.counter(100), rules.sshurl]"

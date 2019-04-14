@@ -19,7 +19,7 @@
         <span>Sign Out</span>
       </v-tooltip>
     </v-toolbar>
-    <v-navigation-drawer app v-model="navDrawer" :mini-variant="navMini" hide-overlay dark>
+    <v-navigation-drawer app :mini-variant="navMini" hide-overlay dark>
       <v-toolbar dense dark>
         <v-btn @click.stop="navMini = !navMini" icon>
           <v-icon>list</v-icon>
@@ -36,6 +36,7 @@
         :key="option.id"
         :termOptions="option.options"
         v-model="option.connected"
+        :navMini.sync="navMini"
         @changeConnection="changeConnection"
       />
     </v-content>
@@ -85,7 +86,6 @@ export default {
           connection: ""
         }
       ],
-      navDrawer: true,
       dialog: false,
       errMsg: {
         text: "",

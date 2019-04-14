@@ -11,6 +11,8 @@
               <v-flex xs12 sm6 md6>
                 <v-text-field
                   label="Name"
+                  autofocus
+                  v-if="value"
                   v-model="editKey.name"
                   :rules="[rules.required, rules.counter(100)]"
                 ></v-text-field>
