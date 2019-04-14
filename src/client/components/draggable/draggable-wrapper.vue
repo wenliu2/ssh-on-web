@@ -18,13 +18,36 @@
             <v-icon :color="item.connected ? 'green' : ''">aspect_ratio</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>
-              {{item.name}}
-              <v-icon style="font-size: 14px" @click="showEdit(item)">edit</v-icon>
-            </v-list-tile-title>
+            <v-list-tile-title>{{item.name}}</v-list-tile-title>
+          </v-list-tile-content>
+          <v-list-tile-content>
+            <v-dialog dark v-model="editDialog" width="500">
+              <template v-slot:activator="{ on }">
+                <v-icon small @click="showEdit(item)">edit</v-icon>
+              </template>
+              <v-card>
+                <v-card-text>
+                  <v-text-field
+                    @keyup.enter="handleEditDialogButton"
+                    v-model="edit.editText"
+                    label="Name:"
+                    autofocus
+                  />
+                </v-card-text>
+                <v-divider></v-divider>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn flat @click="handleEditDialogButton">{{edit.buttonText}}</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
           </v-list-tile-content>
           <v-list-tile-action>
-            <v-icon v-if="options.length > 1 && item.connected === false" @click="closeItem(item)">close</v-icon>
+            <v-icon
+              v-if="options.length > 1 && item.connected === false"
+              small
+              @click="closeItem(item)"
+            >close</v-icon>
           </v-list-tile-action>
         </v-list-tile>
       </transition-group>
@@ -34,18 +57,6 @@
         <v-icon @click="add" style="cursor: pointer" dark>add</v-icon>
       </v-list-tile-action>
     </v-list-tile>
-    <v-dialog v-model="editDialog" width="500">
-      <v-card>
-        <v-card-text>
-          <v-text-field v-model="edit.editText" label="Name:"/>
-        </v-card-text>
-        <v-divider></v-divider>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" flat @click="handleEditDialogButton">{{edit.buttonText}}</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
   </v-list>
 </template>
 

@@ -12,7 +12,7 @@
         v-on:click="connectToggle"
         v-if="activeOption.connection != ''"
       >{{activeOption.connected? "Disconnect" : "Reconnect" }}</v-btn>
-      <v-tooltip bottom>
+      <v-tooltip style="margin-left: 5px" bottom>
         <v-btn v-on:click="logout" icon slot="activator">
           <v-icon>exit_to_app</v-icon>
         </v-btn>
@@ -39,14 +39,14 @@
         @changeConnection="changeConnection"
       />
     </v-content>
-    <v-dialog v-model="dialog" width="500">
+    <v-dialog dark v-model="dialog" width="500">
       <v-card>
-        <v-card-title class="headline grey lighten-2" primary-title>{{errMsg.type}}</v-card-title>
+        <v-card-title class="headline">{{errMsg.type}}</v-card-title>
         <v-card-text>{{errMsg.text}}</v-card-text>
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" flat @click="handleDialogButton">{{errMsg.buttonText}}</v-btn>
+          <v-btn flat @click="handleDialogButton">{{errMsg.buttonText}}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
