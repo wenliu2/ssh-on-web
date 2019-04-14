@@ -45,12 +45,13 @@ class SocketApp {
       if (msg.op === 'connect') {
         // ssh to server based on the client input
         this.openConnection(msg.data)
-      } else if (msg.op === 'data') {
+      } else if (msg.op === 'data' && this.term) {
         // client is sending the data
         this.term.write(data)
-      } else if (msg.op === 'resize') {
+      } else if (msg.op === 'resize' && this.term) {
         // client is resizing
         this.term.resize(data.col, data.row)
+        logger.debug("resizing")
       } else {
         logger.warn(`unknown message from client: ${strmsg}`)
       }

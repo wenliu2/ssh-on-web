@@ -5,6 +5,7 @@
 import { w3cwebsocket as W3cwebsocket } from "websocket";
 import { hterm, lib } from "hterm-umdjs";
 import GlobalStore from "../../global-store";
+import _ from "lodash";
 export default {
   model: {
     prop: "termConnected",
@@ -20,6 +21,7 @@ export default {
       cols: 80,
       rows: 30,
       terminal: null,
+      debounceResize: null,
       wsConnected: false
     };
   },
@@ -30,6 +32,7 @@ export default {
     }
   },
   mounted() {
+    this.debounceResize = _.debounce(this.resizePty, 1000);
     function initHterm(that, hterm1, lib1) {
       hterm1.defaultStorage = new lib1.Storage.Local();
       lib1.init(function() {
@@ -76,7 +79,8 @@ export default {
             // console.log(`resize, ${columns}, ${rows}`)
             that.cols = columns;
             that.rows = rows;
-            that.sendMessage("resize", { col: columns, row: rows });
+            // that.sendMessage("resize", { col: columns, row: rows });
+            that.debounceResize();
           };
 
           // You can call io.push() to foreground a fresh io context, which can
@@ -110,6 +114,10 @@ export default {
       } else if (op !== "resize") {
         console.warn("connection is not open.");
       }
+    },
+
+    resizePty() {
+      this.sendMessage("resize", { col: this.cols, row: this.rows });
     },
 
     reqSShConnect(options) {
