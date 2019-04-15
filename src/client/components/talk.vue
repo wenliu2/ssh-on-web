@@ -1,7 +1,6 @@
 <template>
   <v-app>
     <v-toolbar app dense dark>
-      <h2>Hello {{auth.nt}}!</h2>
       <SSHTo @changeOption="changeOption"/>
       <Keys/>
       <v-spacer></v-spacer>
@@ -21,11 +20,18 @@
         <span>Sign Out</span>
       </v-tooltip>
     </v-toolbar>
-    <v-navigation-drawer app :mini-variant="navMini" hide-overlay dark>
+    <v-navigation-drawer app :mini-variant.sync="navMini" hide-overlay dark>
       <v-toolbar dense dark>
-        <v-btn @click.stop="navMini = !navMini" icon>
-          <v-icon>list</v-icon>
-        </v-btn>
+        <v-list-tile-action>
+          <v-btn @click.stop="navMini = !navMini" icon>
+            <v-icon>list</v-icon>
+          </v-btn>
+        </v-list-tile-action>
+        <v-list-tile-content>
+          <v-list-tile-title style="text-align: right">
+            <h2>Hello {{auth.nt}}!</h2>
+          </v-list-tile-title>
+        </v-list-tile-content>
       </v-toolbar>
       <draggable v-model="optionsArr"/>
     </v-navigation-drawer>
@@ -166,6 +172,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .v-btn.v-btn--icon.theme--dark {
-  margin-left: -3px;
+  margin-left: -12px;
 }
 </style>
