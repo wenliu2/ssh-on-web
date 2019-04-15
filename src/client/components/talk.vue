@@ -20,7 +20,7 @@
         <span>Sign Out</span>
       </v-tooltip>
     </v-toolbar>
-    <v-navigation-drawer app :mini-variant.sync="navMini" hide-overlay dark>
+    <v-navigation-drawer app :mini-variant="navMini" hide-overlay dark>
       <v-toolbar dense dark>
         <v-list-tile-action>
           <v-btn @click.stop="navMini = !navMini" icon>
