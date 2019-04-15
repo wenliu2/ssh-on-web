@@ -13,8 +13,8 @@
         v-on:click="connectToggle"
         v-if="activeOption.connection != ''"
       >{{activeOption.connected? "Disconnect" : "Reconnect" }}</v-btn>
-      <v-tooltip style="margin-left: 5px" bottom>
-        <v-btn v-on:click="logout" icon slot="activator">
+      <v-tooltip bottom>
+        <v-btn @click="logout" icon slot="activator">
           <v-icon>exit_to_app</v-icon>
         </v-btn>
         <span>Sign Out</span>
@@ -22,16 +22,20 @@
     </v-toolbar>
     <v-navigation-drawer app :mini-variant="navMini" hide-overlay dark>
       <v-toolbar dense dark>
-        <v-list-tile-action>
-          <v-btn @click.stop="navMini = !navMini" icon>
-            <v-icon>list</v-icon>
-          </v-btn>
-        </v-list-tile-action>
-        <v-list-tile-content>
-          <v-list-tile-title style="text-align: right">
-            <h2>Hello {{auth.nt}}!</h2>
-          </v-list-tile-title>
-        </v-list-tile-content>
+        <v-list dense>
+          <v-list-tile>
+            <v-list-tile-action>
+              <v-btn @click.stop="navMini = !navMini" icon>
+                <v-icon>list</v-icon>
+              </v-btn>
+            </v-list-tile-action>
+            <v-list-tile-content>
+              <v-list-tile-title style="text-align: right">
+                <h2>Hello {{auth.nt}}!</h2>
+              </v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </v-list>
       </v-toolbar>
       <draggable v-model="optionsArr"/>
     </v-navigation-drawer>
@@ -170,8 +174,3 @@ export default {
   }
 };
 </script>
-<style lang="scss" scoped>
-.v-btn.v-btn--icon.theme--dark {
-  margin-left: -12px;
-}
-</style>
