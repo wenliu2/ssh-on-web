@@ -2,6 +2,8 @@
   <v-app>
     <v-toolbar app dense dark>
       <h2>Hello {{auth.nt}}!</h2>
+      <SSHTo @changeOption="changeOption"/>
+      <Keys/>
       <v-spacer></v-spacer>
       <span style="padding-right: 10px">{{activeOption.connection}}</span>
       <v-icon small color="green" v-if="activeOption.connected">wifi_tethering</v-icon>
@@ -24,8 +26,6 @@
         <v-btn @click.stop="navMini = !navMini" icon>
           <v-icon>list</v-icon>
         </v-btn>
-        <SSHTo v-show="!navMini" @changeOption="changeOption"/>
-        <Keys v-show="!navMini"/>
       </v-toolbar>
       <draggable v-model="optionsArr"/>
     </v-navigation-drawer>
