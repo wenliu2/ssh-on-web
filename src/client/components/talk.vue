@@ -170,7 +170,7 @@ export default {
           return o.isActive;
         })[0] || this.optionsArr[0]
       );
-    },
+    }
   }
 };
 </script>
