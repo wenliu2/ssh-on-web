@@ -64,7 +64,8 @@ export default {
 
 <style lang="scss">
 #app {
-  height: calc(100vh - 16px);
+  // height: calc(100vh - 16px);
+  background-color: black;
 }
 * {
   text-transform: none !important;
