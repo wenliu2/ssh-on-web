@@ -21,28 +21,7 @@
             <v-list-tile-title>{{item.name}}</v-list-tile-title>
           </v-list-tile-content>
           <v-list-tile-content>
-            <v-dialog dark v-model="editDialog" width="500">
-              <template v-slot:activator="{ on }">
-                <v-icon small @click="showEdit(item)">edit</v-icon>
-              </template>
-              <v-card>
-                <v-card-text>
-                  <!-- make autofocus work -->
-                  <v-text-field
-                    v-if="editDialog"
-                    @keyup.enter="handleEditDialogButton"
-                    v-model="edit.editText"
-                    label="Name:"
-                    autofocus
-                  />
-                </v-card-text>
-                <v-divider></v-divider>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn flat @click="handleEditDialogButton">{{edit.buttonText}}</v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
+            <v-icon small @click.stop="showEdit(item)">edit</v-icon>
           </v-list-tile-content>
           <v-list-tile-action>
             <v-icon
@@ -59,11 +38,39 @@
         <v-icon @click="add" style="cursor: pointer" dark>add</v-icon>
       </v-list-tile-action>
     </v-list-tile>
+    <v-dialog dark v-model="editDialog" width="500">
+      <v-card>
+        <v-card-text>
+          <!-- make autofocus work -->
+          <v-container grid-list-md>
+            <v-form ref="form" v-model="valid" lazy-validation>
+              <v-text-field
+                v-if="editDialog"
+                @keyup.enter="handleEditDialogButton"
+                v-model="edit.editText"
+                required
+                :rules="[rules.required, rules.counter(100)]"
+                label="Name:"
+                autofocus
+              />
+              <!-- fix v-form auto refresh with one input -->
+              <input style="display: none">
+            </v-form>
+          </v-container>
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn flat @click="handleEditDialogButton">{{edit.buttonText}}</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-list>
 </template>
 
 <script>
 import draggable from "vuedraggable";
+import UTILS from "../../utils/utils";
 import _ from "lodash";
 export default {
   components: {
@@ -74,6 +81,11 @@ export default {
     event: "changeList"
   },
   props: ["list"],
+  watch: {
+    list: function(newList) {
+      this.options = newList;
+    }
+  },
   data() {
     return {
       options: this.list,
@@ -83,7 +95,9 @@ export default {
         id: "",
         editText: "",
         buttonText: "OK"
-      }
+      },
+      valid: true,
+      rules: UTILS.rules
     };
   },
   computed: {
@@ -134,9 +148,11 @@ export default {
       this.editDialog = true;
     },
     handleEditDialogButton() {
-      this.editItem.name = this.edit.editText;
-      this.editDialog = false;
-      this.changePropList(this.options);
+      if (this.valid) {
+        this.editItem.name = this.edit.editText;
+        this.editDialog = false;
+        this.changePropList(this.options);
+      }
     },
     closeItem(item) {
       _.remove(this.options, o => {

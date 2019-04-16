@@ -26,7 +26,8 @@
                 :rules="[rules.required, rules.counter(100), rules.sshurl]"
                 @keyup.enter="saveURL"
               />
-              <input>
+              <!-- fix v-form auto refresh with one input -->
+              <input style="display: none">
             </v-flex>
             <v-flex xs12 sm6 md6 align-center>
               <v-btn small round @click="saveURL">Connect</v-btn>

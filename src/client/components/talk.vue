@@ -3,6 +3,7 @@
     <v-toolbar app dense dark>
       <SSHTo @changeOption="changeOption"/>
       <Keys/>
+      <Workspaces v-model="optionsArr"/>
       <v-spacer></v-spacer>
       <span style="padding-right: 10px">{{activeOption.connection}}</span>
       <v-icon small color="green" v-if="activeOption.connected">wifi_tethering</v-icon>
@@ -66,6 +67,7 @@
 <script>
 import GlobalStore from "../global-store";
 import SSHTo from "./ssh-to/ssh-to.vue";
+import Workspaces from "./workspace/workspace.vue";
 import Keys from "./keys/keys.vue";
 import Term from "./term/term.vue";
 import ls from "local-storage";
@@ -77,9 +79,12 @@ export default {
     SSHTo,
     Keys,
     Term,
-    draggable
+    draggable,
+    Workspaces
   },
-  mounted() {},
+  mounted() {
+    this.loading = false;
+  },
 
   data() {
     return {
