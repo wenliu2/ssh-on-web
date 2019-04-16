@@ -40,9 +40,12 @@
       </v-toolbar>
       <draggable v-model="optionsArr"/>
     </v-navigation-drawer>
-    <v-content v-show="option.isActive" v-for="option in optionsArr" :key="option.id">
+    <v-content>
       <Term
-        v-if="option.isActive"
+        v-for="option in sortedOptionsArr"
+        v-show="option.isActive"
+        :isActive="option.isActive"
+        :key="option.id"
         :termOptions="option.options"
         v-model="option.connected"
         :navMini.sync="navMini"
@@ -170,6 +173,9 @@ export default {
           return o.isActive;
         })[0] || this.optionsArr[0]
       );
+    },
+    sortedOptionsArr() {
+      return _.sortBy(this.optionsArr, ["id"]);
     }
   }
 };

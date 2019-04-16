@@ -11,7 +11,7 @@ export default {
     prop: "termConnected",
     event: "changeTermConnected"
   },
-  props: ["termOptions", "termConnected", "navMini"],
+  props: ["termOptions", "termConnected", "navMini", "isActive"],
   connection: "",
   data() {
     return {
@@ -22,18 +22,48 @@ export default {
       rows: 30,
       terminal: null,
       debounceResize: null,
-      wsConnected: false
+      wsConnected: false,
+      firstRun: true
     };
   },
   watch: {
     termConnected: function(newVal) {
       if (newVal) this.socketOpen();
       else this.ws.close();
+    },
+    isActive: function(newVal) {
+      if (newVal && this.firstRun) {
+        this.initHterm(this, hterm, lib);
+        this.firstRun = false;
+      }
     }
   },
   mounted() {
     this.debounceResize = _.debounce(this.resizePty, 1000);
-    function initHterm(that, hterm1, lib1) {
+    if (this.isActive && this.firstRun) {
+      this.initHterm(this, hterm, lib);
+      this.firstRun = false;
+    }
+
+    // const that = this
+    // import(/* webpackChunkName: "hterm" */ 'hterm-umdjs').then( module => {
+    //  const hterm = module.hterm
+    //  const lib = module.lib
+    //  initHterm(that, hterm, lib)
+    // })
+  },
+  methods: {
+    sendMessage(op, data) {
+      if (this.wsConnected && this.ws) {
+        if (!this.navMini && op !== "resize") {
+          this.$emit("update:navMini", true);
+        }
+        this.ws.send(JSON.stringify({ op, data }));
+      } else if (op !== "resize") {
+        console.warn("connection is not open.");
+      }
+    },
+    initHterm(that, hterm1, lib1) {
       hterm1.defaultStorage = new lib1.Storage.Local();
       lib1.init(function() {
         // opt_profileName is the name of the terminal profile to load, or "default" if
@@ -96,27 +126,6 @@ export default {
         t.installKeyboard();
         that.terminal = t;
       }); // -- lib.init
-    }
-
-    initHterm(this, hterm, lib);
-
-    // const that = this
-    // import(/* webpackChunkName: "hterm" */ 'hterm-umdjs').then( module => {
-    //  const hterm = module.hterm
-    //  const lib = module.lib
-    //  initHterm(that, hterm, lib)
-    // })
-  },
-  methods: {
-    sendMessage(op, data) {
-      if (this.wsConnected && this.ws) {
-        if (!this.navMini && op !== "resize") {
-          this.$emit("update:navMini", true);
-        }
-        this.ws.send(JSON.stringify({ op, data }));
-      } else if (op !== "resize") {
-        console.warn("connection is not open.");
-      }
     },
 
     resizePty() {
