@@ -85,7 +85,8 @@ class SocketApp {
     });
 
     this.term.on('exit', (code) => {
-      logger.debug((new Date()) + " PID=" + this.term.pid + " ENDED")
+      logger.debug((new Date()) + " PID=" + this.term.pid + " ENDED" + "EXIT CODE" + code)
+      this.ws.send("PTY exit code " + code + "\r\n")
       this.ws.close()
     });
   }
