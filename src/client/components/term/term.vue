@@ -52,6 +52,9 @@ export default {
     //  initHterm(that, hterm, lib)
     // })
   },
+  beforeDestroy() {
+    if (this.termConnected && this.ws) this.ws.close();
+  },
   methods: {
     sendMessage(op, data) {
       if (this.wsConnected && this.ws) {
