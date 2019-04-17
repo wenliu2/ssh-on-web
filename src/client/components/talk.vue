@@ -135,6 +135,7 @@ export default {
       } else {
         this.activeOption.options = options;
         this.activeOption.connected = true;
+        this.connecting = true;
       }
       this.navMini = true;
     },
