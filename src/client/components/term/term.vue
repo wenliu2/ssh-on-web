@@ -22,14 +22,16 @@ export default {
       rows: 30,
       terminal: null,
       debounceResize: null,
-      wsConnected: false,
       firstRun: true
     };
   },
   watch: {
     termConnected: function(newVal) {
       if (newVal) this.socketOpen();
-      else this.wsClose();
+      else if (this.ws.readyState === 1) {
+        this.io.print("\r\nForce close Websocket\r\n");
+        this.ws.close();
+      }
     },
     isActive: function(newVal) {
       if (newVal && this.firstRun) {
@@ -53,14 +55,11 @@ export default {
     // })
   },
   beforeDestroy() {
-    if (this.termConnected && this.ws) this.wsClose();
-  },
-  destroyed() {
-    if (this.ws) this.ws.close();
+    if (this.ws.readyState === 1) this.ws.close();
   },
   methods: {
     sendMessage(op, data) {
-      if (this.wsConnected && this.ws) {
+      if (this.ws.readyState === 1) {
         if (!this.navMini && op !== "resize") {
           this.$emit("update:navMini", true);
         }
@@ -164,16 +163,13 @@ export default {
 
       this.ws = new W3cwebsocket(wsUrl, this.auth.token);
       this.ws.onopen = () => {
-        this.wsConnected = true;
         if (this.terminal) this.terminal.focus();
         this.reqSShConnect(options);
       };
       this.ws.onclose = () => {
-        this.wsConnected = false;
         if (this.connecting) this.$emit("update:connecting", false);
-        this.$emit("changeTermConnected", this.wsConnected);
+        this.$emit("changeTermConnected", false);
         this.io.println("Remotion connection closed.");
-        this.ws = null;
       };
       this.ws.onerror = () => {
         this.ws.close();
@@ -183,11 +179,6 @@ export default {
         if (this.connecting) this.$emit("update:connecting", false);
         this.io.print(msg.data);
       };
-    },
-
-    wsClose() {
-      this.io.print("\r\n");
-      if (this.ws) this.ws.send(JSON.stringify({ op: "close" }));
     }
   }
 };
