@@ -11,7 +11,7 @@ export default {
     prop: "termConnected",
     event: "changeTermConnected"
   },
-  props: ["termOptions", "termConnected", "navMini", "isActive"],
+  props: ["termOptions", "termConnected", "navMini", "isActive", "connecting"],
   connection: "",
   data() {
     return {
@@ -176,6 +176,7 @@ export default {
       };
 
       this.ws.onmessage = msg => {
+        if (this.connecting) this.$emit("update:connecting", false);
         this.io.print(msg.data);
       };
     },
