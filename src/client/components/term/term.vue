@@ -173,6 +173,7 @@ export default {
         if (this.connecting) this.$emit("update:connecting", false);
         this.$emit("changeTermConnected", this.wsConnected);
         this.io.println("Remotion connection closed.");
+        this.ws = null;
       };
       this.ws.onerror = () => {
         this.ws.close();
