@@ -29,7 +29,7 @@ export default {
   watch: {
     termConnected: function(newVal) {
       if (newVal) this.socketOpen();
-      else this.ws.close();
+      else this.wsClose();
     },
     isActive: function(newVal) {
       if (newVal && this.firstRun) {
@@ -53,7 +53,10 @@ export default {
     // })
   },
   beforeDestroy() {
-    if (this.termConnected && this.ws) this.ws.close();
+    if (this.termConnected && this.ws) this.wsClose();
+  },
+  destroyed() {
+    if (this.ws) this.ws.close();
   },
   methods: {
     sendMessage(op, data) {
@@ -175,6 +178,11 @@ export default {
       this.ws.onmessage = msg => {
         this.io.print(msg.data);
       };
+    },
+
+    wsClose() {
+      this.io.print("\r\n");
+      if (this.ws) this.ws.send(JSON.stringify({ op: "close" }));
     }
   }
 };

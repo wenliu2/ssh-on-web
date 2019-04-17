@@ -40,6 +40,7 @@ class SocketApp {
     }, interval)
 
     this.ws.on('message', (strmsg) => {
+      if (!this.ws.isAlive) this.ws.isAlive = true
       const msg = JSON.parse(strmsg)
       const data = msg.data
       if (msg.op === 'connect') {
@@ -52,6 +53,8 @@ class SocketApp {
         // client is resizing
         this.term.resize(data.col, data.row)
         logger.debug("resizing")
+      } else if (msg.op === 'close' && this.term) {
+        this.term.destroy()
       } else {
         logger.warn(`unknown message from client: ${strmsg}`)
       }
@@ -60,6 +63,7 @@ class SocketApp {
     this.ws.on('close', () => {
       logger.debug('closed')
       // term.end()
+      this.ws.isAlive = false
       if (this.term) this.term.destroy()
       clearInterval(pingLoop);
     })
@@ -86,8 +90,11 @@ class SocketApp {
 
     this.term.on('exit', (code) => {
       logger.debug((new Date()) + " PID=" + this.term.pid + " ENDED" + "EXIT CODE" + code)
-      this.ws.send("PTY exit code " + code + "\r\n")
-      this.ws.close()
+      if (this.ws.isAlive) {
+        this.ws.send("PTY exit code " + code + "\r\n")
+        this.ws.close()
+        this.ws.isAlive = false
+      }
     });
   }
 
