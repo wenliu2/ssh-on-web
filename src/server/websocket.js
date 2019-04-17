@@ -93,7 +93,6 @@ class SocketApp {
       if (this.ws.isAlive) {
         this.ws.send("PTY exit code " + code + "\r\n")
         this.ws.close()
-        this.ws.isAlive = false
       }
     });
   }

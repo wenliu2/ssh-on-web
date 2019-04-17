@@ -122,7 +122,7 @@ export default {
       this.auth.clearToken();
     },
     connectToggle() {
-      if (!this.activeOption.connected) this.connecting = true;
+      this.connecting = true;
       this.activeOption.connected = !this.activeOption.connected;
     },
     changeOption(options) {

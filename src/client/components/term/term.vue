@@ -150,6 +150,8 @@ export default {
         rows: this.rows,
         options
       });
+      this.io.print("Trying connecting ...\r\n");
+      this.io.print("You can press ctrl+c to cancel.\r\n");
     },
 
     socketOpen() {
@@ -168,6 +170,7 @@ export default {
       };
       this.ws.onclose = () => {
         this.wsConnected = false;
+        if (this.connecting) this.$emit("update:connecting", false);
         this.$emit("changeTermConnected", this.wsConnected);
         this.io.println("Remotion connection closed.");
       };
