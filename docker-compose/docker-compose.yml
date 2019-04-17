@@ -13,8 +13,8 @@ services:
     environment:
       - MONGODB_URL=mongodb://mongodb/toolsdb
       - NODE_ENV=production
-    volumes:
-      - /data/ssh-on-web/config:/ssh-on-web/config
+    # volumes:
+      # - /data/ssh-on-web/config:/ssh-on-web/config
     depends_on:
       - mongodb
     ports:

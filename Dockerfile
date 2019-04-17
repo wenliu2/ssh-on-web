@@ -10,6 +10,8 @@ RUN yarn && yarn build
 
 FROM node:10.15.1-alpine
 RUN apk add openssh-client
+COPY --from=ssh-on-web-build /ssh-on-web/config/ssh_config /etc/ssh/ssh_config
+
 RUN mkdir -p /ssh-on-web
 WORKDIR /ssh-on-web
 COPY --from=ssh-on-web-build /ssh-on-web/dist /ssh-on-web/dist
