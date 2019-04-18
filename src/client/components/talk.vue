@@ -77,6 +77,7 @@ import Term from "./term/term.vue";
 import ls from "local-storage";
 import draggable from "./draggable/draggable-wrapper.vue";
 import _ from "lodash";
+import utils from "../utils/utils";
 
 export default {
   components: {
@@ -86,8 +87,8 @@ export default {
     draggable,
     Workspaces
   },
-  mounted() {
-    this.loading = false;
+  created() {
+    this.optionsArr.push(utils.defaultOptions(this.optionsArr));
   },
 
   data() {
@@ -95,17 +96,7 @@ export default {
       auth: GlobalStore.auth,
       navMini: true,
       options: {},
-      optionsArr: [
-        {
-          options: {},
-          id: 0,
-          name: "Default",
-          isActive: true,
-          connected: false,
-          connecting: false,
-          connection: ""
-        }
-      ],
+      optionsArr: [],
       dialog: false,
       errMsg: {
         text: "",
@@ -174,11 +165,9 @@ export default {
       })[0].id;
     },
     activeOption() {
-      return (
-        _.filter(this.optionsArr, o => {
-          return o.isActive;
-        })[0] || this.optionsArr[0]
-      );
+      return _.find(this.optionsArr, o => {
+        return o.isActive;
+      });
     },
     sortedOptionsArr() {
       return _.sortBy(this.optionsArr, ["id"]);

@@ -1,11 +1,13 @@
 import rules from "./rules";
 import GlobalStore from "../global-store";
+import _ from "lodash";
 export default {
   defaultHost: defaultHost,
   defaultKey: defaultKey,
   rules: rules,
   fetchHeaders: fetchHeaders,
-  authTypeList: ["password", "publickey"]
+  authTypeList: ["password", "publickey"],
+  defaultOptions: defaultOptions
 };
 
 function defaultHost() {
@@ -33,5 +35,17 @@ function fetchHeaders() {
     "Accept": "application/json",
     "Content-Type": "application/json",
     "Authorization": `Bearer ${GlobalStore.auth.token}`
+  };
+}
+
+function defaultOptions(options) {
+  return {
+    options: {},
+    id: options.length > 0 ? _.maxBy(options, "id").id + 1 : 0,
+    name: options.length > 0 ? `New Terminal ${_.maxBy(options, "id").id + 1}` : "New Terminal 0",
+    isActive: true,
+    connected: false,
+    connecting: false,
+    connection: ""
   };
 }

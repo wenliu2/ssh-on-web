@@ -119,14 +119,16 @@ export default {
   },
   methods: {
     add() {
-      const item = {
-        options: {},
-        id: _.maxBy(this.options, "id").id + 1,
-        name: `New Terminal ${_.maxBy(this.options, "id").id + 1}`,
-        isActive: true,
-        connected: false,
-        connection: ""
-      };
+      // const item = {
+      //   options: {},
+      //   id: _.maxBy(this.options, "id").id + 1,
+      //   name: `New Terminal ${_.maxBy(this.options, "id").id + 1}`,
+      //   isActive: true,
+      //   connected: false,
+      //   connecting: false,
+      //   connection: ""
+      // };
+      const item = UTILS.defaultOptions(this.options);
       this.options.push(item);
       this.changeActive(item);
     },
