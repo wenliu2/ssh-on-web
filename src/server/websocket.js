@@ -86,7 +86,7 @@ class SocketApp {
 
     this.term.on('exit', (code) => {
       logger.debug((new Date()) + " PID=" + this.term.pid + " ENDED" + "EXIT CODE" + code)
-      if (this.ws.readyState === 1) {
+      if (this.ws && this.ws.readyState === 1) {
         this.ws.send("PTY exit code " + code + "\r\n")
         this.ws.close()
       }
