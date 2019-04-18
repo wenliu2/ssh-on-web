@@ -141,6 +141,7 @@ export default {
     applyWorkspace(workspace) {
       _.each(workspace.options, function(o) {
         if (o.connected) o.connected = false;
+        if (o.connecting) o.connecting = false;
       });
       this.$emit("change", workspace.options);
       this.dialog = false;

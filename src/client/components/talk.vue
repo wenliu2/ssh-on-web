@@ -11,8 +11,8 @@
       <v-btn
         small
         round
-        :disabled="connecting"
-        :loading="connecting"
+        :disabled="activeOption.connecting"
+        :loading="activeOption.connecting"
         v-on:click="connectToggle"
         v-if="activeOption.connection != ''"
       >{{activeOption.connected? "Disconnect" : "Reconnect" }}</v-btn>
@@ -51,7 +51,7 @@
         :termOptions="option.options"
         v-model="option.connected"
         :navMini.sync="navMini"
-        :connecting.sync="connecting"
+        :connecting.sync="option.connecting"
         @changeConnection="changeConnection"
       />
     </v-content>
@@ -95,7 +95,6 @@ export default {
       auth: GlobalStore.auth,
       navMini: true,
       options: {},
-      connecting: false,
       optionsArr: [
         {
           options: {},
@@ -103,6 +102,7 @@ export default {
           name: "Default",
           isActive: true,
           connected: false,
+          connecting: false,
           connection: ""
         }
       ],
@@ -122,7 +122,7 @@ export default {
       this.auth.clearToken();
     },
     connectToggle() {
-      this.connecting = true;
+      this.activeOption.connecting = true;
       this.activeOption.connected = !this.activeOption.connected;
     },
     changeOption(options) {
@@ -135,7 +135,7 @@ export default {
       } else {
         this.activeOption.options = options;
         this.activeOption.connected = true;
-        this.connecting = true;
+        this.activeOption.connecting = true;
       }
       this.navMini = true;
     },
