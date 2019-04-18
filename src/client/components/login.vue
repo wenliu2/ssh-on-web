@@ -10,7 +10,7 @@
                 <v-spacer></v-spacer>
               </v-toolbar>
               <v-card-text>
-                <v-form>
+                <v-form ref="signinForm">
                   <v-text-field
                     prepend-icon="person"
                     name="nt"
@@ -36,43 +36,45 @@
                   <v-btn class="login-menu-action-button" slot="activator">Sign up</v-btn>
                   <v-card>
                     <v-card-title class="headline grey lighten-2" primary-title>Sign Up</v-card-title>
-                    <v-card-text>
-                      <v-text-field
-                        prepend-icon="person"
-                        label="Username"
-                        v-model="nt"
-                        @keyup.enter="signUp"
-                      />
-                      <v-text-field
-                        v-model="password"
-                        prepend-icon="lock"
-                        :append-icon="vPwd ? 'visibility_off' : 'visibility'"
-                        :rules="[rules.required, rules.password]"
-                        :type="vPwd ? 'text' : 'password'"
-                        name="input-10-1"
-                        label="Password"
-                        counter
-                        @keyup.enter="signUp"
-                        @click:append="vPwd = !vPwd"
-                      />
-                      <v-text-field
-                        v-model="verifiedPassword"
-                        prepend-icon="lock"
-                        :append-icon="vVPwd ? 'visibility_off' : 'visibility'"
-                        :rules="[rules.required, rules.verifiedPassword]"
-                        :type="vVPwd ? 'text' : 'password'"
-                        name="input-10-1"
-                        label="Verfied Password"
-                        counter
-                        @click:append="vVPwd = !vVPwd"
-                        @keyup.enter="signUp"
-                      />
-                    </v-card-text>
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn color="primary" flat @click="signUpModal = false">Cancel</v-btn>
-                      <v-btn color="primary" flat @click="signUp">Sign Up</v-btn>
-                    </v-card-actions>
+                    <v-form ref="signupForm">
+                      <v-card-text>
+                        <v-text-field
+                          prepend-icon="person"
+                          label="Username"
+                          v-model="nt"
+                          @keyup.enter="signUp"
+                        />
+                        <v-text-field
+                          v-model="password"
+                          prepend-icon="lock"
+                          :append-icon="vPwd ? 'visibility_off' : 'visibility'"
+                          :rules="[rules.required, rules.password]"
+                          :type="vPwd ? 'text' : 'password'"
+                          name="input-10-1"
+                          label="Password"
+                          counter
+                          @keyup.enter="signUp"
+                          @click:append="vPwd = !vPwd"
+                        />
+                        <v-text-field
+                          v-model="verifiedPassword"
+                          prepend-icon="lock"
+                          :append-icon="vVPwd ? 'visibility_off' : 'visibility'"
+                          :rules="[rules.required, rules.verifiedPassword]"
+                          :type="vVPwd ? 'text' : 'password'"
+                          name="input-10-1"
+                          label="Verfied Password"
+                          counter
+                          @click:append="vVPwd = !vVPwd"
+                          @keyup.enter="signUp"
+                        />
+                      </v-card-text>
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="primary" flat @click="signUpModal = false">Cancel</v-btn>
+                        <v-btn color="primary" flat @click="signUp">Sign Up</v-btn>
+                      </v-card-actions>
+                    </v-form>
                   </v-card>
                 </v-dialog>
                 <v-btn class="login-menu-action-button" color="primary" v-on:click="login">Login</v-btn>
@@ -113,6 +115,7 @@ export default {
 
   watch: {
     signUpModal: function(val) {
+      this.$refs.signupForm.resetValidation();
       this.errorMsg = "";
       this.nt = "";
       this.password = "";
@@ -132,41 +135,43 @@ export default {
 
   methods: {
     signUp() {
-      this.errorMsg = "";
-      fetch("/auth/signup", {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        },
-        method: "POST",
-        body: JSON.stringify({
-          nt: this.nt,
-          password: this.password,
-          verifiedPassword: this.verifiedPassword
+      if (this.$refs.signupForm.validate()) {
+        this.errorMsg = "";
+        fetch("/auth/signup", {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+          method: "POST",
+          body: JSON.stringify({
+            nt: this.nt,
+            password: this.password,
+            verifiedPassword: this.verifiedPassword
+          })
         })
-      })
-        .then(res => {
-          if (res.ok) {
-            this.login();
-            this.signUpModal = false;
-            return { error: "" };
-          } else {
+          .then(res => {
+            if (res.ok) {
+              this.login();
+              this.signUpModal = false;
+              return { error: "" };
+            } else {
+              this.nt = "";
+              this.password = "";
+              this.verifiedPassword = "";
+              return res.json();
+            }
+          })
+          .then(data => {
+            this.errorMsg = data.error;
+          })
+          .catch(err => {
+            console.log("err", err);
             this.nt = "";
             this.password = "";
             this.verifiedPassword = "";
-            return res.json();
-          }
-        })
-        .then(data => {
-          this.errorMsg = data.error;
-        })
-        .catch(err => {
-          console.log("err", err);
-          this.nt = "";
-          this.password = "";
-          this.verifiedPassword = "";
-          this.errorMsg = err;
-        });
+            this.errorMsg = err;
+          });
+      }
     },
 
     login() {
