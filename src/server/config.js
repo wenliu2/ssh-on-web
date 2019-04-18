@@ -28,6 +28,12 @@ var config = convict({
       format: String,
       default: "qwe123",
       env: "JWT_SECRET"
+    },
+    max_age: {
+      doc: "The max age for JWT service",
+      format: String,
+      default: "30m",
+      env: "JWT_MAX_AGE"
     }
   },
   db: {

@@ -12,7 +12,6 @@ import Talk from "./components/talk.vue";
 import GlobalStore from "./global-store";
 import Login from "./components/login.vue";
 import ls from "local-storage";
-import moment from "moment";
 
 export default {
   components: { Talk, Login },
@@ -22,12 +21,6 @@ export default {
       auth: GlobalStore.auth,
       checkAuth: false
     };
-  },
-
-  created() {
-    if (moment(ls("token-expired")).isBefore(moment().subtract(30, "m"))) {
-      ls.clear();
-    }
   },
 
   mounted() {

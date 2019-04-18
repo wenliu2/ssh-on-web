@@ -189,7 +189,6 @@ export default {
             res.json().then(json => {
               this.auth.setToken(json.token);
               ls("token", json.token);
-              ls("token-expired", Date.now());
               this.auth.login(json.user.nt);
             });
             return { message: "" };

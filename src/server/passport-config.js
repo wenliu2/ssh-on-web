@@ -15,10 +15,14 @@ const sha512 = require('js-sha512')
 const UserModel = db.UserModel
 
 const jwtSecret = config.get("passport.jwt_secret")
+const jwtMaxAge = config.get("passport.max_age")
 
 logger.debug(`jwtSecret = ${jwtSecret}`)
 const PASSPORT_CONFIG = {
-  JWT_SECRET: jwtSecret
+  JWT_SECRET: jwtSecret,
+  JWT_OPTIONS: {
+    maxAge:jwtMaxAge
+  }
 }
 
 passport.use(new LocalStrategy({
@@ -54,7 +58,8 @@ passport.use(new LocalStrategy({
 
 passport.use(new JWTStrategy({
   jwtFromRequest: extractJWT.fromExtractors([extractJWT.fromAuthHeaderAsBearerToken(), extractJWT.fromHeader('sec-websocket-protocol')]),
-  secretOrKey: PASSPORT_CONFIG.JWT_SECRET
+  secretOrKey: PASSPORT_CONFIG.JWT_SECRET,
+  jsonWebTokenOptions: PASSPORT_CONFIG.JWT_OPTIONS
 }, (jwtPayload, cb) => {
   logger.debug('jwtPayload:', jwtPayload) 
   return cb(null, jwtPayload) // req.user will be set as jwtPayload in next step in passport.js internally.
