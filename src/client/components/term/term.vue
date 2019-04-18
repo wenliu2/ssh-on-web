@@ -28,7 +28,7 @@ export default {
   watch: {
     termConnected: function(newVal) {
       if (newVal) this.socketOpen();
-      else if (this.ws.readyState === 1) {
+      else if (this.ws && this.ws.readyState === 1) {
         this.io.print("\r\nForce close Websocket\r\n");
         this.ws.close();
       }
@@ -55,11 +55,11 @@ export default {
     // })
   },
   beforeDestroy() {
-    if (this.ws.readyState === 1) this.ws.close();
+    if (this.ws && this.ws.readyState === 1) this.ws.close();
   },
   methods: {
     sendMessage(op, data) {
-      if (this.ws.readyState === 1) {
+      if (this.ws && this.ws.readyState === 1) {
         if (!this.navMini && op !== "resize") {
           this.$emit("update:navMini", true);
         }
