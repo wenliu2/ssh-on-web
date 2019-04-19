@@ -3,7 +3,7 @@
     <div v-if="checkAuth">Checking Login Status ...</div>
     <Login v-if="!checkAuth && !auth.isLogin"/>
     <Talk v-if="!checkAuth && auth.isLogin"/>
-    <v-snackbar v-model="auth.tokenExpired" top :timeout="5000">
+    <v-snackbar v-model="auth.tokenExpired" top :timeout="5000" color="error">
       Token is Expired, please Login again.
       <v-btn color="white" flat @click="auth.tokenExpired = false">Close</v-btn>
     </v-snackbar>
