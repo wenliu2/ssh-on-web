@@ -77,6 +77,7 @@
 <script>
 import UTILS from "../../utils/utils";
 import _ from "lodash";
+import GlobalStore from "../../global-store";
 export default {
   model: {
     prop: "options",
@@ -104,6 +105,9 @@ export default {
         })
           .then(res => {
             if (res.ok) return res.json();
+            else if (res.status === 401) {
+              GlobalStore.auth.expired();
+            }
             return Promise.reject(res);
           })
           .then(json => {
@@ -126,6 +130,9 @@ export default {
       })
         .then(res => {
           if (res.ok) return res.json();
+          else if (res.status === 401) {
+            GlobalStore.auth.expired();
+          }
           return Promise.reject(res);
         })
         .then(json => {
@@ -153,6 +160,9 @@ export default {
       })
         .then(res => {
           if (res.ok) return res.json();
+          if (res.status === 401) {
+            GlobalStore.auth.expired();
+          }
           Promise.reject(res);
         })
         .then(workspaces => {

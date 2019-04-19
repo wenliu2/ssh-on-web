@@ -18,6 +18,7 @@ const jwtSecret = config.get("passport.jwt_secret")
 const jwtMaxAge = config.get("passport.max_age")
 
 logger.debug(`jwtSecret = ${jwtSecret}`)
+logger.debug(`jwtMaxAge = ${jwtMaxAge}`)
 const PASSPORT_CONFIG = {
   JWT_SECRET: jwtSecret,
   JWT_OPTIONS: {

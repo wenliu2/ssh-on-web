@@ -41,6 +41,7 @@
 <script>
 import UTILS from "../../utils/utils";
 import EditKey from "./edit-key.vue";
+import GlobalStore from "../../global-store";
 export default {
   components: {
     EditKey
@@ -66,6 +67,9 @@ export default {
       })
         .then(res => {
           if (res.ok) return res.json();
+          else if (res.status === 401) {
+            GlobalStore.auth.expired();
+          }
           return Promise.reject(res);
         })
         .then(json => {
@@ -90,6 +94,9 @@ export default {
       })
         .then(res => {
           if (res.ok) return res.json();
+          else if (res.status === 401) {
+            GlobalStore.auth.expired();
+          }
           return Promise.reject(res);
         })
         .then(json => {
@@ -107,6 +114,9 @@ export default {
       })
         .then(res => {
           if (res.ok) return res.json();
+          else if (res.status === 401) {
+            GlobalStore.auth.expired();
+          }
           Promise.reject(res);
         })
         .then(keys => {

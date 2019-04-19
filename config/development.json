@@ -1,7 +1,8 @@
 {
   "port": 8080,
   "passport": {
-    "jwt_secret": "qwe123asd"
+    "jwt_secret": "qwe123asd",
+    "max_age": "1d"
   }
 }
 

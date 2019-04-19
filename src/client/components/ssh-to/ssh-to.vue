@@ -173,6 +173,9 @@ export default {
       })
         .then(res => {
           if (res.ok) return res.json();
+          else if (res.status === 401) {
+            GlobalStore.auth.expired();
+          }
           return Promise.reject(res);
         })
         .then(hosts => {
@@ -190,6 +193,9 @@ export default {
       })
         .then(res => {
           if (res.ok) return res.json();
+          else if (res.status === 401) {
+            GlobalStore.auth.expired();
+          }
           return Promise.reject(res);
         })
         .then(keys => {
@@ -233,6 +239,9 @@ export default {
           method: "DELETE"
         })
           .then(res => {
+            if (res.status === 401) {
+              GlobalStore.auth.expired();
+            }
             this.backendLoading = false;
             if (res.ok) {
               res.json().then(uuid => {
@@ -262,6 +271,9 @@ export default {
           method: "POST"
         })
           .then(res => {
+            if (res.status === 401) {
+              GlobalStore.auth.expired();
+            }
             this.backendLoading = false;
             if (res.ok) {
               res.json().then(uuid => {
@@ -286,6 +298,9 @@ export default {
           method: "PUT"
         })
           .then(res => {
+            if (res.status === 401) {
+              GlobalStore.auth.expired();
+            }
             this.backendLoading = false;
             if (res.ok) {
               res.json().then(host => this.hosts.push(host));

@@ -27,8 +27,28 @@ export default {
   },
   watch: {
     termConnected: function(newVal) {
-      if (newVal) this.socketOpen();
-      else if (this.ws && this.ws.readyState === 1) {
+      if (newVal) {
+        fetch("/api/login-status", {
+          headers: {
+            Authorization: `Bearer ${GlobalStore.auth.token}`
+          }
+        })
+          .then(res => {
+            this.checkAuth = false;
+            if (res.ok) {
+              // this.auth.login();
+              return res.json();
+            } else if (res.status === 401) {
+              GlobalStore.auth.expired();
+            }
+          })
+          .then(() => {
+            this.socketOpen();
+          })
+          .catch(err => {
+            console.error("login error: ", err);
+          });
+      } else if (this.ws && this.ws.readyState === 1) {
         this.io.print("\r\nForce close Websocket\r\n");
         this.ws.close();
       }

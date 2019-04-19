@@ -2,8 +2,8 @@ const store = {
   auth: {
     isLogin: false,
     token: "",
+    tokenExpired: false,
     nt: "",
-
     login(nt) {
       this.isLogin = true;
       this.nt = nt;
@@ -18,6 +18,11 @@ const store = {
     },
     clearToken() {
       this.token = "";
+    },
+    expired() {
+      this.tokenExpired = true;
+      this.clearToken();
+      this.logout();
     }
   },
   state: {
