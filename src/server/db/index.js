@@ -18,7 +18,8 @@ function connect() {
     bufferCommands: false,
     autoReconnect: true,
     reconnectTries: Number.MAX_VALUE,
-    connectTimeoutMS: 10000
+    connectTimeoutMS: 10000,
+    useCreateIndex: true
   }, (err) => {
     logger.info(`DB info: ${dbConfig.url}, user: ${dbConfig.user}`)
     if ( err ) {

@@ -42,7 +42,7 @@ router.put('/host', (req, res) => {
   const uuid = uuidv1()
   const host = Object.assign({}, req.body)
   host.uuid = uuid
-  UserModel.update({ nt: user.nt }, { $push: { hosts: host } }, (err, raw) => {
+  UserModel.updateOne({ nt: user.nt }, { $push: { hosts: host } }, (err, raw) => {
     if (err) {
       res.status(500).json(err)
     } else {
@@ -53,7 +53,7 @@ router.put('/host', (req, res) => {
 // delete a host 
 router.delete('/host/:uuid', (req, res) => {
   const uuid = req.params['uuid']
-  UserModel.update({ nt: req.user.nt }, { $pull: { hosts: { uuid: uuid } } },
+  UserModel.updateOne({ nt: req.user.nt }, { $pull: { hosts: { uuid: uuid } } },
     (err, raw) => {
       if (err) {
         res.status(500).json(err)
@@ -68,7 +68,7 @@ router.post('/host', (req, res) => {
   const user = req.user
   const host = req.body
 
-  UserModel.update({ nt: user.nt, "hosts.uuid": host.uuid }, { $set: { "hosts.$": host } },
+  UserModel.updateOne({ nt: user.nt, "hosts.uuid": host.uuid }, { $set: { "hosts.$": host } },
     (err, raw) => {
       if (err) {
         res.status(500).json(err)
@@ -91,7 +91,7 @@ router.put('/key', (req, res) => {
   UserModel.findOne({ nt: user.nt, 'keys.hash': key.hash }, (err, doc) => {
     if (err) return res.status(500).json(err)
     if (doc) return res.status(409).json({ message: 'resource already exists' })
-    UserModel.update({ nt: user.nt }, { $addToSet: { keys: key } }, (err, raw) => {
+    UserModel.updateOne({ nt: user.nt }, { $addToSet: { keys: key } }, (err, raw) => {
       if (err) return res.status(500).json(err)
       res.json({ hash: key.hash })
     })
@@ -113,12 +113,12 @@ router.delete('/key/:hash', (req, res) => {
   const user = req.user
   const hash = req.params['hash']
 
-  UserModel.update({ nt: req.user.nt }, { $pull: { keys: { hash: hash } } },
+  UserModel.updateOne({ nt: req.user.nt }, { $pull: { keys: { hash: hash } } },
     (err, raw) => {
       if (err) {
         res.status(500).json(err)
       } else {
-        UserModel.update({ nt: req.user.nt, 'hosts.keyHash': hash }, { $set: { 'hosts.$.authType': 'password', 'hosts.$.keyHash': '' } }, (err, raw) => {
+        UserModel.updateOne({ nt: req.user.nt, 'hosts.keyHash': hash }, { $set: { 'hosts.$.authType': 'password', 'hosts.$.keyHash': '' } }, (err, raw) => {
           if (err) {
             res.status(500).json(err)
           } else {
@@ -145,7 +145,7 @@ router.put('/workspace', (req, res) => {
   const uuid = uuidv1()
   const workspace = Object.assign({}, req.body)
   workspace.uuid = uuid
-  UserModel.update({ nt: user.nt }, { $push: { workspaces: workspace } }, (err, raw) => {
+  UserModel.updateOne({ nt: user.nt }, { $push: { workspaces: workspace } }, (err, raw) => {
     if (err) {
       res.status(500).json(err)
     } else {
@@ -157,7 +157,7 @@ router.put('/workspace', (req, res) => {
 //delete workspace
 router.delete('/workspace/:uuid', (req, res) => {
   const uuid = req.params['uuid']
-  UserModel.update({ nt: req.user.nt }, { $pull: { workspaces: { uuid: uuid } } },
+  UserModel.updateOne({ nt: req.user.nt }, { $pull: { workspaces: { uuid: uuid } } },
     (err, raw) => {
       if (err) {
         res.status(500).json(err)
