@@ -43,8 +43,9 @@ export default {
           // this.auth.login();
           return res.json();
         } else if (res.status === 401) {
-          this.auth.logout();
+          this.auth.expired();
         }
+        return Promise.reject(res);
       })
       .then(res => {
         this.auth.login(res.user.nt);
