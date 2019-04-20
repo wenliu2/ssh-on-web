@@ -20,11 +20,6 @@ pipeline {
         }
       }
     }
-    stage('Clean Docker Image') {
-      steps {
-        sh 'docker image prune -af'
-      }
-    }
     stage('INSTALL') {
       steps {
         sh './JenkinsStage/Stage-3.sh'
