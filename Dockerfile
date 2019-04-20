@@ -10,6 +10,8 @@ COPY ./yarn.lock /ssh-on-web/yarn.lock
 RUN yarn
 COPY . /ssh-on-web 
 RUN yarn build
+RUN rm -rf node_modules
+RUN yarn install --prod
 
 FROM node:10.15.3-alpine
 RUN apk add openssh-client
