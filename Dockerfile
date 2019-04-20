@@ -1,4 +1,4 @@
-FROM node:10.15.1 AS ssh-on-web-build
+FROM node:10.15.3 AS ssh-on-web-build
 # FROM victor2333/ssh-on-web:1.0.1
 
 # EXPOSE 8080
@@ -11,7 +11,7 @@ RUN yarn
 COPY . /ssh-on-web 
 RUN yarn build
 
-FROM node:10.15.1-alpine
+FROM node:10.15.3-alpine
 RUN apk add openssh-client
 COPY --from=ssh-on-web-build /ssh-on-web/config/ssh_config /etc/ssh/ssh_config
 
