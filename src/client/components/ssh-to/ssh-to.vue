@@ -167,17 +167,10 @@ export default {
       this.$refs.urlForm.resetValidation();
       const headers = UTILS.fetchHeaders();
       this.backendLoading = true;
-      fetch("/api/hosts", {
+      UTILS.fetch("/api/hosts", {
         headers: headers,
         method: "GET"
       })
-        .then(res => {
-          if (res.ok) return res.json();
-          else if (res.status === 401) {
-            GlobalStore.auth.expired();
-          }
-          return Promise.reject(res);
-        })
         .then(hosts => {
           this.backendLoading = false;
           this.hosts = hosts;
@@ -187,17 +180,10 @@ export default {
           console.error(err);
         });
 
-      fetch("/api/keys", {
+      UTILS.fetch("/api/keys", {
         headers: headers,
         method: "GET"
       })
-        .then(res => {
-          if (res.ok) return res.json();
-          else if (res.status === 401) {
-            GlobalStore.auth.expired();
-          }
-          return Promise.reject(res);
-        })
         .then(keys => {
           this.backendLoading = false;
           this.keys = keys.map(key => {
@@ -234,25 +220,14 @@ export default {
     deleteHost(item) {
       if (confirm("Are you sure you want to delete this item?")) {
         this.backendLoading = true;
-        fetch(`/api/host/${item.uuid}`, {
+        UTILS.fetch(`/api/host/${item.uuid}`, {
           headers: UTILS.fetchHeaders(),
           method: "DELETE"
         })
-          .then(res => {
-            if (res.status === 401) {
-              GlobalStore.auth.expired();
-            }
+          .then(uuid => {
             this.backendLoading = false;
-            if (res.ok) {
-              res.json().then(uuid => {
-                const index = this.hosts.findIndex(
-                  host => uuid.uuid === host.uuid
-                );
-                if (index !== -1) this.hosts.splice(index, 1);
-              });
-            } else {
-              console.error(res);
-            }
+            const index = this.hosts.findIndex(host => uuid.uuid === host.uuid);
+            if (index !== -1) this.hosts.splice(index, 1);
           })
           .catch(err => {
             this.backendLoading = false;
@@ -265,25 +240,16 @@ export default {
       this.backendLoading = true;
       if (host.uuid && host.uuid !== "-1") {
         // existing host, update it
-        fetch("/api/host", {
+        UTILS.fetch("/api/host", {
           headers: UTILS.fetchHeaders(),
           body: JSON.stringify(host),
           method: "POST"
         })
-          .then(res => {
-            if (res.status === 401) {
-              GlobalStore.auth.expired();
-            }
+          .then(uuid => {
             this.backendLoading = false;
-            if (res.ok) {
-              res.json().then(uuid => {
-                const index = this.hosts.findIndex(h => h.uuid === uuid.uuid);
-                if (index !== -1) {
-                  this.hosts.splice(index, 1, Object.assign({}, host));
-                }
-              });
-            } else {
-              console.error("res:", res);
+            const index = this.hosts.findIndex(h => h.uuid === uuid.uuid);
+            if (index !== -1) {
+              this.hosts.splice(index, 1, Object.assign({}, host));
             }
           })
           .catch(err => {
@@ -292,21 +258,15 @@ export default {
           });
       } else {
         // new host, add it
-        fetch("/api/host", {
+        UTILS.fetch("/api/host", {
           headers: UTILS.fetchHeaders(),
           body: JSON.stringify(host),
           method: "PUT"
         })
-          .then(res => {
-            if (res.status === 401) {
-              GlobalStore.auth.expired();
-            }
+
+          .then(host => {
             this.backendLoading = false;
-            if (res.ok) {
-              res.json().then(host => this.hosts.push(host));
-            } else {
-              console.error("res:", res);
-            }
+            this.hosts.push(host);
           })
           .catch(err => {
             this.backendLoading = false;

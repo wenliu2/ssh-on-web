@@ -7,7 +7,8 @@ export default {
   rules: rules,
   fetchHeaders: fetchHeaders,
   authTypeList: ["password", "publickey"],
-  defaultOptions: defaultOptions
+  defaultOptions: defaultOptions,
+  fetch: httpRequest
 };
 
 function defaultHost() {
@@ -48,4 +49,14 @@ function defaultOptions(options) {
     connecting: false,
     connection: ""
   };
+}
+
+function httpRequest(url, options) {
+  return fetch(url, options).then(res => {
+    if (res.ok) return res.json();
+    else if (res.status === 401) {
+      GlobalStore.auth.expired();
+    }
+    return Promise.reject(res);
+  });
 }

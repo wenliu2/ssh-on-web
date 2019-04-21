@@ -41,7 +41,6 @@
 <script>
 import UTILS from "../../utils/utils";
 import EditKey from "./edit-key.vue";
-import GlobalStore from "../../global-store";
 export default {
   components: {
     EditKey
@@ -60,18 +59,11 @@ export default {
 
   methods: {
     saveEditKey(key) {
-      fetch("/api/key", {
+      UTILS.fetch("/api/key", {
         headers: UTILS.fetchHeaders(),
         method: "PUT",
         body: JSON.stringify(key)
       })
-        .then(res => {
-          if (res.ok) return res.json();
-          else if (res.status === 401) {
-            GlobalStore.auth.expired();
-          }
-          return Promise.reject(res);
-        })
         .then(json => {
           key.hash = json.hash;
           this.keys.push(Object.assign({}, key));
@@ -88,17 +80,10 @@ export default {
     },
 
     deleteKey(key) {
-      fetch(`/api/key/${key.hash}`, {
+      UTILS.fetch(`/api/key/${key.hash}`, {
         headers: UTILS.fetchHeaders(),
         method: "DELETE"
       })
-        .then(res => {
-          if (res.ok) return res.json();
-          else if (res.status === 401) {
-            GlobalStore.auth.expired();
-          }
-          return Promise.reject(res);
-        })
         .then(json => {
           const index = this.keys.findIndex(k => k.hash === key.hash);
           if (index !== -1) this.keys.splice(index, 1);
@@ -108,17 +93,10 @@ export default {
         });
     },
     refresh() {
-      fetch("/api/keys", {
+      UTILS.fetch("/api/keys", {
         headers: UTILS.fetchHeaders(),
         method: "GET"
       })
-        .then(res => {
-          if (res.ok) return res.json();
-          else if (res.status === 401) {
-            GlobalStore.auth.expired();
-          }
-          Promise.reject(res);
-        })
         .then(keys => {
           this.keys = keys;
         })

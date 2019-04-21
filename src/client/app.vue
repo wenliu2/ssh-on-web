@@ -14,6 +14,7 @@
 // import Welcome from './components/welcome.vue'
 import Talk from "./components/talk.vue";
 import GlobalStore from "./global-store";
+import UTILS from "./utils/utils";
 import Login from "./components/login.vue";
 import ls from "local-storage";
 
@@ -32,22 +33,13 @@ export default {
     if (!token) return;
     this.auth.setToken(token);
     this.checkAuth = true;
-    fetch("/api/login-status", {
+    UTILS.fetch("/api/login-status", {
       headers: {
         Authorization: `Bearer ${this.auth.token}`
       }
     })
       .then(res => {
         this.checkAuth = false;
-        if (res.ok) {
-          // this.auth.login();
-          return res.json();
-        } else if (res.status === 401) {
-          this.auth.expired();
-        }
-        return Promise.reject(res);
-      })
-      .then(res => {
         this.auth.login(res.user.nt);
       })
       .catch(err => {

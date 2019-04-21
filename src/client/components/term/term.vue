@@ -4,6 +4,7 @@
 <script>
 import { w3cwebsocket as W3cwebsocket } from "websocket";
 import { hterm, lib } from "hterm-umdjs";
+import UTILS from "../../utils/utils";
 import GlobalStore from "../../global-store";
 import _ from "lodash";
 export default {
@@ -28,21 +29,13 @@ export default {
   watch: {
     termConnected: function(newVal) {
       if (newVal) {
-        fetch("/api/login-status", {
+        UTILS.fetch("/api/login-status", {
           headers: {
             Authorization: `Bearer ${GlobalStore.auth.token}`
           }
         })
-          .then(res => {
-            this.checkAuth = false;
-            if (res.ok) {
-              // this.auth.login();
-              return res.json();
-            } else if (res.status === 401) {
-              GlobalStore.auth.expired();
-            }
-          })
           .then(() => {
+            this.checkAuth = false;
             this.socketOpen();
           })
           .catch(err => {

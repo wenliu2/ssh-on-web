@@ -77,7 +77,6 @@
 <script>
 import UTILS from "../../utils/utils";
 import _ from "lodash";
-import GlobalStore from "../../global-store";
 export default {
   model: {
     prop: "options",
@@ -98,18 +97,11 @@ export default {
     },
     newWorkspace() {
       if (this.$refs.form.validate()) {
-        fetch("/api/workspace", {
+        UTILS.fetch("/api/workspace", {
           headers: UTILS.fetchHeaders(),
           method: "PUT",
           body: JSON.stringify(this.workspace)
         })
-          .then(res => {
-            if (res.ok) return res.json();
-            else if (res.status === 401) {
-              GlobalStore.auth.expired();
-            }
-            return Promise.reject(res);
-          })
           .then(json => {
             this.workspace.uuid = json.uuid;
             this.workspaces.push(Object.assign({}, this.workspace));
@@ -124,17 +116,10 @@ export default {
     },
 
     deleteWorkspace(workspace) {
-      fetch(`/api/workspace/${workspace.uuid}`, {
+      UTILS.fetch(`/api/workspace/${workspace.uuid}`, {
         headers: UTILS.fetchHeaders(),
         method: "DELETE"
       })
-        .then(res => {
-          if (res.ok) return res.json();
-          else if (res.status === 401) {
-            GlobalStore.auth.expired();
-          }
-          return Promise.reject(res);
-        })
         .then(json => {
           const index = this.workspaces.findIndex(
             k => k.uuid === workspace.uuid
@@ -154,17 +139,10 @@ export default {
       this.dialog = false;
     },
     refresh() {
-      fetch("/api/workspaces", {
+      UTILS.fetch("/api/workspaces", {
         headers: UTILS.fetchHeaders(),
         method: "GET"
       })
-        .then(res => {
-          if (res.ok) return res.json();
-          if (res.status === 401) {
-            GlobalStore.auth.expired();
-          }
-          Promise.reject(res);
-        })
         .then(workspaces => {
           this.workspaces = workspaces;
         })
