@@ -13,10 +13,11 @@ services:
     environment:
       - MONGODB_URL=mongodb://mongodb/toolsdb
       - NODE_ENV=production
-    # volumes:
+    volumes:
       # - /data/ssh-on-web/config:/ssh-on-web/config
+      - /data/ssh-on-web/ssl:/ssh-on-web/ssl
     depends_on:
       - mongodb
     ports:
-      - "127.0.0.1:8080:8080"
+      - "0.0.0.0:443:8080"
     restart: always

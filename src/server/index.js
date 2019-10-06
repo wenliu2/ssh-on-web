@@ -1,5 +1,5 @@
 // const config = require('./config')
-import config  from './config'
+import config from './config'
 const express = require('express');
 // const logger = require('./logger')('main')
 import LOGGER from './logger'
@@ -17,6 +17,8 @@ const ws = require('./websocket')
 
 const auth = require('./auth')
 const bodyParser = require('body-parser')
+const https = require('https')
+const http = require('http')
 
 import db from './db/'
 
@@ -34,15 +36,19 @@ app.use(compression())
 //---------------------
 app.use(express.static('dist'));
 //body parser
-app.use(bodyParser.json({ type: 'application/json' }))
-app.use(bodyParser.urlencoded({extended: true}))
+app.use(bodyParser.json({
+  type: 'application/json'
+}))
+app.use(bodyParser.urlencoded({
+  extended: true
+}))
 app.disable('x-powered-by');
 
 
 /**
  * The below arguments start the counter functions
  */
-app.use(Prometheus.requestCounters);  
+app.use(Prometheus.requestCounters);
 app.use(Prometheus.responseCounters);
 
 /**
@@ -57,17 +63,37 @@ Prometheus.startCollection();
 //---------------------
 //api part
 //--------------------
-app.use('/api', passport.authenticate('jwt', {session: false}), api)
+app.use('/api', passport.authenticate('jwt', {
+  session: false
+}), api)
 // auth
 app.use('/auth', auth)
 
 // register websocket
-app.use('/ws', passport.authenticate('jwt', {session: false}), ws)
+app.use('/ws', passport.authenticate('jwt', {
+  session: false
+}), ws)
 
 
 // start server
 const port = config.get('port');
-app.listen(port, () => {
-  logger.debug(`Listening on port ${port}!`)
-  db.connect()
-});
+const ssl = config.get('ssl');
+if (ssl.on) {
+  const keyPath = ssl.key_path;
+  const certPath = ssl.cert_path;
+  const options = {
+    key: fs.readFileSync(keyPath),
+    cert: fs.readFileSync(certPath)
+  };
+  https.createServer(app, options).listen(port, () => {
+    logger.debug(`Listening on port ${port}!`)
+    logger.debug(`SSL key file ${options.key}!`)
+    logger.debug(`SSL cert file ${options.cert}!`)
+    db.connect()
+  });
+} else {
+  http.createServer(app).listen(port, () => {
+    logger.debug(`Listening on port ${port}!`)
+    db.connect()
+  });
+}
