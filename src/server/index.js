@@ -19,6 +19,7 @@ const auth = require('./auth')
 const bodyParser = require('body-parser')
 const https = require('https')
 const http = require('http')
+const fs = require('fs')
 
 import db from './db/'
 
