@@ -80,11 +80,15 @@ app.use('/ws', passport.authenticate('jwt', {
 const port = config.get('port');
 const ssl = config.get('ssl');
 if (ssl.on) {
-  const keyPath = ssl.key_path;
-  const certPath = ssl.cert_path;
+  const {
+    key_path,
+    cert_path,
+    ca_path
+  } = ssl;
   const options = {
-    key: fs.readFileSync(keyPath),
-    cert: fs.readFileSync(certPath)
+    key: fs.readFileSync(key_path),
+    cert: fs.readFileSync(cert_path),
+    ca: fs.readFileSync(ca_path)
   };
   https.createServer(app, options).listen(port, () => {
     logger.debug(`Listening on port ${port}!`)

@@ -40,6 +40,12 @@ var config = convict({
       format: String,
       default: "./ssl/cert.pem",
       env: "SSL_CERT"
+    },
+    ca_path: {
+      doc: "The SSL CERT PATH",
+      format: String,
+      default: "./ssl/ca.pem",
+      env: "SSL_CA"
     }
   },
   passport: {
