@@ -102,8 +102,8 @@ const port = config.get('port');
 httpServer.listen(port, () => {
   logger.debug(`Listening on port ${port}!`)
   if (ssl.on) {
-    logger.debug(`SSL key file ${options.key}!`)
-    logger.debug(`SSL cert file ${options.cert}!`)
+    logger.debug(`SSL key file ${ssl.key_path}!`)
+    logger.debug(`SSL cert file ${ssl.cert_path}!`)
   }
   db.connect()
 });
