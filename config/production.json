@@ -1,0 +1,12 @@
+{
+    "port": 8080,
+    "passport": {
+        "jwt_secret": "qwe123asd",
+        "max_age": "30m"
+    },
+    "ssl": {
+        "on": true,
+        "key_path": "/ssh-on-web/ssl/key.pem",
+        "cert_path": "/ssh-on-web/ssl/cert.pem"
+    }
+}

@@ -54,7 +54,7 @@
                 autofocus
               />
               <!-- fix v-form auto refresh with one input -->
-              <input style="display: none">
+              <input style="display: none" />
             </v-form>
           </v-container>
         </v-card-text>

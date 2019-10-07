@@ -22,6 +22,32 @@ var config = convict({
     env: "PORT",
     arg: "port"
   },
+  ssl: {
+    on: {
+      doc: "The http is encrypt or not",
+      format: "Boolean",
+      default: false,
+      env: "SSL_SETTING"
+    },
+    key_path: {
+      doc: "The SSL Key Path",
+      format: String,
+      default: "./ssl/key.pem",
+      env: "SSL_KEY"
+    },
+    cert_path: {
+      doc: "The SSL CERT PATH",
+      format: String,
+      default: "./ssl/cert.pem",
+      env: "SSL_CERT"
+    },
+    ca_path: {
+      doc: "The SSL CERT PATH",
+      format: String,
+      default: "./ssl/ca.pem",
+      env: "SSL_CA"
+    }
+  },
   passport: {
     jwt_secret: {
       doc: "The secret for JWT service",
@@ -72,7 +98,9 @@ if (fs.existsSync('./config/' + env + '.json')) {
 }
 
 // Perform validation
-config.validate({ allowed: 'strict' });
+config.validate({
+  allowed: 'strict'
+});
 
 // module.exports = config;
 export default config

@@ -1,7 +1,11 @@
 const path = require('path');
-const { VueLoaderPlugin } = require('vue-loader');
+const {
+  VueLoaderPlugin
+} = require('vue-loader');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const {
+  CleanWebpackPlugin
+} = require('clean-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
@@ -32,8 +36,7 @@ function config_func(devMode) {
       minimizer: [new TerserPlugin()],
     },
     module: {
-      rules: [
-        {
+      rules: [{
           test: /\.vue$/,
           use: [
             'vue-loader',
@@ -67,25 +70,29 @@ function config_func(devMode) {
           test: /\.styl$/,
           use: [devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
             'css-loader',
-            'stylus-loader']
+            'stylus-loader'
+          ]
         },
         {
           test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)(\?.*)?$/,
-          oneOf: [
-            {
+          oneOf: [{
               test: /\.(png|jpe?g|gif)$/,
               resourceQuery: /vuetify-preload/,
               use: [
                 'vuetify-loader/progressive-loader',
                 {
                   loader: 'url-loader',
-                  options: { limit: 8000 }
+                  options: {
+                    limit: 8000
+                  }
                 }
               ]
             },
             {
               loader: 'url-loader',
-              options: { limit: 8000 }
+              options: {
+                limit: 8000
+              }
             }
           ]
         }
