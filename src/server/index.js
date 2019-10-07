@@ -79,18 +79,18 @@ app.use('/ws', passport.authenticate('jwt', {
 // start server
 const port = config.get('port');
 const ssl = config.get('ssl');
-if (ssl.on) {
-  const {
-    key_path,
-    cert_path,
-    ca_path
-  } = ssl;
+const {
+  key_path,
+  cert_path,
+  ca_path
+} = ssl;
+if (ssl.on && fs.existsSync(key_path) && fs.existsSync(cert_path) && fs.existsSync(ca_path)) {
   const options = {
     key: fs.readFileSync(key_path),
     cert: fs.readFileSync(cert_path),
     ca: fs.readFileSync(ca_path)
   };
-  https.createServer(app, options).listen(port, () => {
+  https.createServer(options, app).listen(port, () => {
     logger.debug(`Listening on port ${port}!`)
     logger.debug(`SSL key file ${options.key}!`)
     logger.debug(`SSL cert file ${options.cert}!`)
