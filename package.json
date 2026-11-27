@@ -64,7 +64,7 @@
   "dependencies": {
     "bluebird": "^3.5.5",
     "body-parser": "^1.19.0",
-    "compression": "^1.7.3",
+    "compression": "^1.8.2",
     "convict": "^6.2.4",
     "express": "^4.17.3",
     "express-ws": "^4.0.0",
